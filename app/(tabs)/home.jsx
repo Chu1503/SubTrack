@@ -5,14 +5,23 @@ import FormField from '../../components/FormField'
 import { useState } from "react";
 import CustomCard from '../../components/CustomCard';
 import { Redirect, router } from "expo-router";
+import { TouchableOpacity } from "react-native";
+
 
 const Home = () => {
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View className="w-full justify-center h-full px-4 my-6">
-          <Image source={images.logo}
-          resizeMode='contain' className="w-[115px] h-[35px] mt-7"/>
+          <View className="flex-row justify-between items-center mt-5">
+            <Image source={images.logo} resizeMode='contain' className="w-[115px] h-[35px]" />
+    
+              <TouchableOpacity
+                className="w-[40px] h-[40px] bg-secondary rounded-full justify-center items-center"
+              >
+                <Text className="text-primary text-3xl">+</Text>
+              </TouchableOpacity>
+            </View>
           
           <Text className="text-lg text-white text-regular mt-10 font-pmedium">Monthy</Text>
           <Text className="text-5xl text-secondary mt-2 font-pbold pt-3">₹69.69</Text>
@@ -35,9 +44,13 @@ const Home = () => {
             date="06/06/2026" 
             price="₹999"
           />
+
+          <View className="mb-10"></View>
           
         </View>
+
       </ScrollView>
+      
     </SafeAreaView>
   )
 }
