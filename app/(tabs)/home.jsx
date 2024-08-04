@@ -37,11 +37,12 @@ const Home = () => {
         }
       >
         <View className="w-full justify-center h-full px-4 my-6">
-          <View className="flex-row justify-between items-center mt-5">
+          <View className="flex-row justify-between items-center mt-7">
             <Image source={images.logo} resizeMode='contain' className="w-[115px] h-[35px]" />
     
               <TouchableOpacity
                 className="w-[40px] h-[40px] bg-secondary rounded-full justify-center items-center"
+                onPress={() => router.push('/add')}
               >
                 <Text className="text-primary text-3xl">+</Text>
               </TouchableOpacity>
@@ -59,7 +60,11 @@ const Home = () => {
               price={`₹${subscription.price}`}
             />
           ))}
+
+        <View className="mb-10"></View>
+        
         </View>
+        
 
       </ScrollView>
       
