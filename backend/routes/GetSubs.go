@@ -38,11 +38,21 @@ func GetSubs(c *fiber.Ctx) error {
 			endDate = subs[i].StartDate.AddDate(1, 0, 0) // Adds one year
 		case strings.HasPrefix(subs[i].Frequency, "custom:"):
 			durationStr := strings.TrimPrefix(subs[i].Frequency, "custom:")
-			duration, err := time.ParseDuration(durationStr)
+			unit := durationStr[len(durationStr)-1:]
+			amount, err := strconv.Atoi(durationStr[:len(durationStr)-1])
 			if err != nil {
 				return c.Status(400).SendString("Invalid custom duration format")
 			}
-			endDate = subs[i].StartDate.Add(duration)
+			switch unit {
+			case "d":
+				endDate = subs[i].StartDate.AddDate(0, 0, amount) // Adds custom days
+			case "m":
+				endDate = subs[i].StartDate.AddDate(0, amount, 0) // Adds custom months
+			case "y":
+				endDate = subs[i].StartDate.AddDate(amount, 0, 0) // Adds custom years
+			default:
+				return c.Status(400).SendString("Invalid custom duration unit")
+			}
 		default:
 			return c.Status(400).SendString("Unknown frequency type")
 		}

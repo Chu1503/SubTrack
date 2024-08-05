@@ -7,14 +7,51 @@ import { Redirect, router } from "expo-router";
 import { TouchableOpacity } from "react-native";
 
 
+const calculateMonthlyPrice = (subscriptions) => {
+  return subscriptions.reduce((total, subscription) => {
+    let monthlyPrice = 0;
+
+    switch (subscription.frequency) {
+      case 'monthly':
+        monthlyPrice = subscription.price;
+        break;
+      case 'annually':
+        monthlyPrice = subscription.price / 12;
+        break;
+      default:
+        if (subscription.frequency.startsWith('custom:')) {
+          const customFrequency = subscription.frequency.split(':')[1];
+          const unit = customFrequency.slice(-1);
+          const amount = parseInt(customFrequency.slice(0, -1), 10);
+
+          if (unit === 'd' && amount) {
+            monthlyPrice = (subscription.price / amount) * 30;
+          } else if (unit === 'm' && amount) {
+            monthlyPrice = subscription.price / amount;
+          } else if (unit === 'y' && amount) {
+            monthlyPrice = subscription.price / (amount * 12);
+          }
+        }
+        break;
+    }
+
+    return total + monthlyPrice;
+  }, 0);
+};
+
+
+
 const Home = () => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [monthlyPrice, setMonthlyPrice] = useState(0);
 
   const fetchSubscriptions = async () => {
     try {
       const response = await axios.get('http://68.233.114.188:5000/sub/991830116710023169');
+      // const response = await axios.get('http://172.17.99.18:8080/sub/991830116710023169');
       setSubscriptions(response.data);
+      setMonthlyPrice(calculateMonthlyPrice(response.data));
     } catch (error) {
       console.error("Error fetching subscriptions:", error);
     }
@@ -49,7 +86,7 @@ const Home = () => {
             </View>
           
           <Text className="text-lg text-white text-regular mt-10 font-pmedium">Monthy</Text>
-          <Text className="text-5xl text-secondary mt-2 font-pbold pt-3">₹69.69</Text>
+          <Text className="text-5xl text-secondary mt-2 font-pbold pt-3">₹{monthlyPrice.toFixed(2)}</Text>
           <Text className="text-md text-white text-regular font-pmedium mb-2">Updated on XX/XX/XXXX</Text>
 
           {subscriptions.map(subscription => (
