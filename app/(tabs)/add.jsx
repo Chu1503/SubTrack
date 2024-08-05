@@ -1,8 +1,8 @@
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, Modal } from 'react-native';
+import { SafeAreaView, ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from "expo-router";
-import FormField from '../../components/FormField';
+import CustomField from '../../components/CustomField';
 import CustomModal from '../../components/CustomModal';
 
 const Add = () => {
@@ -30,14 +30,14 @@ const Add = () => {
             <Text className="text-white text-2xl font-pbold">New Subscription</Text>
           </View>
           
-          <View className="mt-10">
-            <FormField
+          <View className="mt-1">
+            <CustomField
               title="Service"
               placeholder="Select a service"
               onPress={handleOpenModal}
               otherStyles="my-4"
               innerText={
-                <Ionicons name="list" size={24} color="white" />
+                <Ionicons name="list" size={24} color="#FF9C01" />
               }
             />
           </View>
