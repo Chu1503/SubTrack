@@ -1,8 +1,4 @@
 import { Redirect, Stack, router } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { View, Text } from 'react-native'
-import { TouchableOpacity } from "react-native";
-import CustomButton from '../../components/CustomButton';
 
 const TabsLayout = () => {
   return (
@@ -28,8 +24,6 @@ const TabsLayout = () => {
         </TouchableOpacity>
       </View> */}
 
-
-      <StatusBar backgroundColor="#161622" style="light" />
     </>
   )
 }

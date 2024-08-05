@@ -25,7 +25,7 @@ const FormField = ({
         />
         
         {innerText && (
-          <Text className="text-gray-100 font-pmedium text-base">{innerText}</Text>
+          <Text className="text-gray-100 font-pregular text-base">{innerText}</Text>
         )}
       </View>
     </View>
