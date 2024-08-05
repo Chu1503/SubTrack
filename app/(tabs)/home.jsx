@@ -78,10 +78,10 @@ const Home = () => {
             <Image source={images.logo} resizeMode='contain' className="w-[115px] h-[35px]" />
     
               <TouchableOpacity
-                className="w-[40px] h-[40px] bg-secondary rounded-full justify-center items-center"
+                className="w-[60px] h-[40px] bg-primary rounded-full justify-center items-center border border-secondary"
                 onPress={() => router.push('/add')}
               >
-                <Text className="text-primary text-3xl">+</Text>
+                <Text className="text-secondary text-3xl">+</Text>
               </TouchableOpacity>
             </View>
           
