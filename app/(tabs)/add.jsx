@@ -1,11 +1,11 @@
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, TextInput, Modal } from 'react-native';
+import { SafeAreaView, ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import Entypo from '@expo/vector-icons/Entypo';
 import { router } from "expo-router";
-import CustomField from '../../components/CustomField'; // Adjust the import path as needed
+import CustomField from '../../components/CustomField';
 import CustomModal from '../../components/CustomModal';
-import CustomDatePicker from '../../components/CustomDatePicker';
+import CustomPeriod from '../../components/CustomPeriod';
 
 const Add = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -69,7 +69,7 @@ const Add = () => {
               onPress={handleOpenModal}
               otherStyles="my-2"
               innerText={<Entypo name="list" size={24} color="#FF9C01" />}
-              editable={false} // Disable typing
+              editable={false}
             />
             <CustomField
               title="Billing Date"
@@ -77,7 +77,7 @@ const Add = () => {
               onPress={handleOpenDatePicker}
               otherStyles="my-2"
               innerText={<Entypo name="calendar" size={24} color="#FF9C01" />}
-              editable={false} // Disable typing
+              editable={false}
             />
             <CustomField
               title="Price"
@@ -108,47 +108,19 @@ const Add = () => {
             </View>
 
             {customPeriodVisible && (
-              <View className="mt-2 items-center">
-                <View className="flex-row items-center">
-                  <Text className="text-white text-base">Every</Text>
-                  <TextInput
-                    className="w-20 p-2 bg-gray-800 rounded-md text-white text-center"
-                    value={customPeriodValue}
-                    onChangeText={setCustomPeriodValue}
-                    keyboardType="numeric"
-                  />
-                  <TouchableOpacity
-                    className="w-36 ml-2 p-2 bg-gray-800 rounded-md border border-gray-600 items-center"
-                    onPress={handleDropdownToggle}
-                  >
-                    <Text className="text-white text-base">{customPeriodUnit}</Text>
-                  </TouchableOpacity>
-                </View>
-
-                {dropdownVisible && (
-                  <View className="top-2 bg-gray-800 rounded-md border border-gray-600 w-36">
-                    {['Day', 'Month', 'Year'].map((unit) => (
-                      <TouchableOpacity
-                        key={unit}
-                        className="p-2 border-b border-gray-600"
-                        onPress={() => handleDropdownSelect(unit)}
-                      >
-                        <Text className="text-white text-base">{unit}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                )}
-              </View>
+              <CustomPeriod
+                value={customPeriodValue}
+                onValueChange={setCustomPeriodValue}
+                unit={customPeriodUnit}
+                onUnitChange={setCustomPeriodUnit}
+                dropdownVisible={dropdownVisible}
+                onDropdownToggle={handleDropdownToggle}
+                onDropdownSelect={handleDropdownSelect}
+              />
             )}
           </View>
 
           <CustomModal visible={modalVisible} onClose={handleCloseModal} />
-          <CustomDatePicker
-            visible={datePickerVisible}
-            value={selectedDate || new Date()}
-            onDateChange={handleDateChange}
-            onClose={() => setDatePickerVisible(false)}
-          />
         </View>
       </ScrollView>
     </SafeAreaView>
