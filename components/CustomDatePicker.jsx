@@ -35,13 +35,13 @@ const CustomDatePicker = ({ visible, value, onDateChange, onClose }) => {
           />
           <View className="flex-row mt-4 justify-between">
             <TouchableOpacity
-              className="flex-1 p-3 border border-[#FF9C01] rounded-md mx-2 items-center"
+              className="flex-1 p-3 border border-secondary rounded-md mx-2 items-center"
               onPress={onClose}
             >
-              <Text className="text-[#FF9C01]">Cancel</Text>
+              <Text className="text-secondary">Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className="flex-1 p-3 bg-[#FF9C01] rounded-md mx-2 items-center"
+              className="flex-1 p-3 bg-secondary rounded-md mx-2 items-center"
               onPress={handleOkPress}
             >
               <Text className="text-white">OK</Text>

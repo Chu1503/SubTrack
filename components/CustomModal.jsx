@@ -1,93 +1,83 @@
-// // CustomModal.jsx
-// import React from 'react';
-// import { View, Text, TouchableOpacity, StyleSheet, Modal, Dimensions } from 'react-native';
-// import { PanGestureHandler, State } from 'react-native-gesture-handler';
-// import Animated, { Easing, useSharedValue, useAnimatedStyle, withSpring, withSpringTransition } from 'react-native-reanimated';
+import React, { useState, useRef } from 'react';
+import { Modal, View, Text, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
+import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
+import CustomCardList from './CustomCardList';
+import { images } from '../constants';
 
-// const { height: screenHeight } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
-// const CustomModal = ({ visible, onClose }) => {
-//   const translateY = useSharedValue(screenHeight);
+const CustomModal = ({ visible, onClose }) => {
+  const [translateY, setTranslateY] = useState(0);
+  const [activeTab, setActiveTab] = useState('List');
+  const panRef = useRef(null);
 
-//   const animatedStyles = useAnimatedStyle(() => {
-//     return {
-//       transform: [{ translateY: translateY.value }],
-//     };
-//   });
+  const handleGesture = ({ nativeEvent }) => {
+    if (nativeEvent.translationY > 0) {
+      setTranslateY(nativeEvent.translationY);
+    }
+  };
 
-//   React.useEffect(() => {
-//     translateY.value = withSpring(visible ? 0 : screenHeight, {
-//       damping: 5,
-//       stiffness: 100,
-//       overshootClamping: true,
-//     });
-//   }, [visible]);
+  const handleGestureEnd = ({ nativeEvent }) => {
+    const shouldClose = nativeEvent.translationY > height * 0.3 || nativeEvent.velocityY > 1000;
+    if (shouldClose) {
+      onClose();
+    } else {
+      setTranslateY(0);
+    }
+  };
 
-//   const handleGestureEvent = Animated.event(
-//     [{ nativeEvent: { translationY: translateY.value } }],
-//     { useNativeDriver: true }
-//   );
+  const platforms = [
+    { name: 'Prime Video', image: images.primevideo },
+    { name: 'Netflix', image: images.primevideo },
+    { name: 'Hotstar', image: images.primevideo },
+    { name: 'Sony LIV', image: images.primevideo },
+  ];
 
-//   const handleStateChange = ({ nativeEvent }) => {
-//     if (nativeEvent.oldState === State.ACTIVE && nativeEvent.translationY > 100) {
-//       onClose();
-//     }
-//   };
+  return (
+    <Modal transparent visible={visible} animationType="slide">
+      <GestureHandlerRootView className="flex-1">
+        <PanGestureHandler
+          ref={panRef}
+          onGestureEvent={handleGesture}
+          onEnded={handleGestureEnd}
+        >
+          <View className="flex-1 justify-end" style={{ transform: [{ translateY }] }}>
+            <View className="h-full bg-[#1e1e2d] rounded-t-[30px] p-4 w-full">
+              <View className="flex-row justify-between border-b border-gray-600 mb-4">
+                <TouchableOpacity
+                  className={`flex-1 p-2 ${activeTab === 'List' ? 'bg-gray-800' : 'bg-gray-600'}`}
+                  onPress={() => setActiveTab('List')}
+                >
+                  <Text className={`text-center text-white font-semibold ${activeTab === 'List' ? 'text-lg' : 'text-base'}`}>
+                    List
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  className={`flex-1 p-2 ${activeTab === 'Custom' ? 'bg-gray-800' : 'bg-gray-600'}`}
+                  onPress={() => setActiveTab('Custom')}
+                >
+                  <Text className={`text-center text-white font-semibold ${activeTab === 'Custom' ? 'text-lg' : 'text-base'}`}>
+                    Custom
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {activeTab === 'List' ? (
+                <ScrollView>
+                  {platforms.map((platform, index) => (
+                    <CustomCardList key={index} platform={platform.name} image={platform.image} />
+                  ))}
+                </ScrollView>
+              ) : (
+                <View className="flex-1 items-center justify-center">
+                  <Text className="text-white text-xl">Wow Gestures!</Text>
+                </View>
+              )}
+            </View>
+          </View>
+        </PanGestureHandler>
+      </GestureHandlerRootView>
+    </Modal>
+  );
+};
 
-//   return (
-//     <Modal transparent visible={visible} animationType="none">
-//       <TouchableOpacity style={styles.overlay} onPress={onClose}>
-//         <PanGestureHandler
-//           onGestureEvent={handleGestureEvent}
-//           onHandlerStateChange={handleStateChange}
-//         >
-//           <Animated.View style={[styles.modal, animatedStyles]}>
-//             <View style={styles.header}>
-//               <Text style={styles.title}>Select a Service</Text>
-//               <TouchableOpacity onPress={onClose}>
-//                 <Text style={styles.close}>X</Text>
-//               </TouchableOpacity>
-//             </View>
-//             <View style={styles.content}>
-//               <Text>Select a service from the list below.</Text>
-//               {/* Add your list or content here */}
-//             </View>
-//           </Animated.View>
-//         </PanGestureHandler>
-//       </TouchableOpacity>
-//     </Modal>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   overlay: {
-//     flex: 1,
-//     backgroundColor: 'rgba(0,0,0,0.5)',
-//     justifyContent: 'flex-end',
-//   },
-//   modal: {
-//     backgroundColor: 'white',
-//     padding: 16,
-//     borderTopLeftRadius: 16,
-//     borderTopRightRadius: 16,
-//     height: 300, // Adjust the height as needed
-//   },
-//   header: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//   },
-//   title: {
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//   },
-//   close: {
-//     fontSize: 18,
-//     color: 'red',
-//   },
-//   content: {
-//     marginTop: 20,
-//   },
-// });
-
-// export default CustomModal;
+export default CustomModal;
