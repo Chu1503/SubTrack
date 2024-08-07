@@ -1,15 +1,25 @@
-import React, { useState, useRef } from 'react';
-import { Modal, View, Text, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { Modal, View, Text, Dimensions, ScrollView, TouchableOpacity, Animated } from 'react-native';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 import CustomCardList from './CustomCardList';
 import { images } from '../constants';
 
-const { height } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 const CustomModal = ({ visible, onClose }) => {
   const [translateY, setTranslateY] = useState(0);
   const [activeTab, setActiveTab] = useState('List');
   const panRef = useRef(null);
+  const underlinePosition = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const index = activeTab === 'List' ? 0 : 1;
+    Animated.timing(underlinePosition, {
+      toValue: width / 2 * index,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  }, [activeTab]);
 
   const handleGesture = ({ nativeEvent }) => {
     if (nativeEvent.translationY > 0) {
@@ -42,27 +52,40 @@ const CustomModal = ({ visible, onClose }) => {
           onEnded={handleGestureEnd}
         >
           <View className="flex-1 justify-end" style={{ transform: [{ translateY }] }}>
-            <View className="h-full bg-[#1e1e2d] rounded-t-[30px] p-4 w-full">
-              <View className="flex-row justify-between border-b border-gray-600 mb-4">
-                <TouchableOpacity
-                  className={`flex-1 p-2 ${activeTab === 'List' ? 'bg-gray-800' : 'bg-gray-600'}`}
-                  onPress={() => setActiveTab('List')}
-                >
-                  <Text className={`text-center text-white font-semibold ${activeTab === 'List' ? 'text-lg' : 'text-base'}`}>
-                    List
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className={`flex-1 p-2 ${activeTab === 'Custom' ? 'bg-gray-800' : 'bg-gray-600'}`}
-                  onPress={() => setActiveTab('Custom')}
-                >
-                  <Text className={`text-center text-white font-semibold ${activeTab === 'Custom' ? 'text-lg' : 'text-base'}`}>
-                    Custom
-                  </Text>
-                </TouchableOpacity>
+            <View className="h-full bg-[#1e1e2d] rounded-t-[30px] w-full">
+              <View className="relative p-1">
+                <View className="flex-row justify-between mb-2">
+                  <TouchableOpacity
+                    className="flex-1 p-2"
+                    onPress={() => setActiveTab('List')}
+                  >
+                    <Text className={`text-center text-white text-lg font-psemibold`}>
+                      List
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className="flex-1 p-2"
+                    onPress={() => setActiveTab('Custom')}
+                  >
+                    <Text className="text-center text-white text-lg font-psemibold">
+                      Custom
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <Animated.View
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    height: 2,
+                    width: width / 2,
+                    backgroundColor: '#FF9C01',
+                    transform: [{ translateX: underlinePosition }],
+                  }}
+                />
               </View>
               {activeTab === 'List' ? (
-                <ScrollView>
+                <ScrollView className="p-3">
                   {platforms.map((platform, index) => (
                     <CustomCardList key={index} platform={platform.name} image={platform.image} />
                   ))}

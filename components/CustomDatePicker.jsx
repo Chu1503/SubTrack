@@ -14,7 +14,7 @@ const CustomDatePicker = ({ visible, value, onDateChange, onClose }) => {
   };
 
   const handleOkPress = () => {
-    onClose(); // Close the modal when OK is pressed
+    onClose();
   };
 
   return (
