@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Modal, View, Text, Dimensions, ScrollView, TouchableOpacity, Animated } from 'react-native';
+import { Modal, View, Text, Dimensions, ScrollView, TouchableOpacity, Animated, Image } from 'react-native';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 import CustomCardList from './CustomCardList';
 import { images } from '../constants';
@@ -53,6 +53,7 @@ const CustomModal = ({ visible, onClose }) => {
         >
           <View className="flex-1 justify-end" style={{ transform: [{ translateY }] }}>
             <View className="h-full bg-[#1e1e2d] rounded-t-[30px] w-full">
+            <Image source={images.dash} resizeMode='contain' className="h-[35px] self-center mt-2" />
               <View className="relative p-1">
                 <View className="flex-row justify-between mb-2">
                   <TouchableOpacity
