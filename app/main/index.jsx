@@ -6,6 +6,7 @@ import CustomCard from '../../components/CustomCard';
 import { useRouter } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 
 const calculateMonthlyPrice = (subscriptions) => {
   return subscriptions.reduce((total, subscription) => {
@@ -108,22 +109,25 @@ const Home = () => {
       >
         <View className="w-full justify-center h-full px-4 my-6">
           <View className="flex-row justify-between items-center mt-7">
-            <Image source={images.logo} resizeMode='contain' className="w-[115px] h-[35px]" />
+            
             <TouchableOpacity
-              className="w-[40px] h-[40px] bg-secondary rounded-full justify-center items-center"
+              className="w-[40px] h-[40px] rounded-full justify-center items-center"
               onPress={handleLogout}
             >
-              <Text className="text-primary text-3xl">logout</Text>
+              <Text className="text-primary text-3xl">
+              <SimpleLineIcons name="logout" size={24} color="red" />
+              </Text>
             </TouchableOpacity>
+            <Image source={images.logo} resizeMode='contain' className="w-[115px] h-[35px]" />
             <TouchableOpacity
-              className="w-[40px] h-[40px] bg-secondary rounded-full justify-center items-center"
+              className="w-[60px] h-[40px] border-2 border-secondary rounded-full justify-center items-center"
               onPress={() => router.push('/main/add')}
             >
-              <Text className="text-primary text-3xl">+</Text>
+              <Text className="text-secondary text-3xl">+</Text>
             </TouchableOpacity>
           </View>
-          <Text className="text-lg text-white text-regular mt-10 font-pmedium">Hello {userName}!</Text>
-          <Text className="text-lg text-white text-regular mt-10 font-pmedium">Monthly</Text>
+          <Text className="text-lg text-white text-regular mt-7 font-pbold text-center">Hello <Text className="text-secondary">{userName}</Text>!</Text>
+          <Text className="text-lg text-white text-regular mt-5 font-pmedium">Monthly</Text>
           <Text className="text-5xl text-secondary mt-2 font-pbold pt-3">₹{monthlyPrice.toFixed(2)}</Text>
           <Text className="text-md text-white text-regular font-pmedium mb-2">Updated on XX/XX/XXXX</Text>
           {subscriptions.map(subscription => (

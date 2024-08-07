@@ -1,5 +1,5 @@
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
+import { SafeAreaView, ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Entypo from '@expo/vector-icons/Entypo';
 import { router } from "expo-router";
@@ -19,13 +19,15 @@ const Add = () => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const handleOpenModal = () => {
+    console.log('Opening modal'); // Debug
     setModalVisible(true);
   };
-
+  
   const handleCloseModal = () => {
+    console.log('Closing modal'); // Debug
     setModalVisible(false);
   };
-
+  
   const handleOpenDatePicker = () => {
     setDatePickerVisible(true);
   };
@@ -55,7 +57,7 @@ const Add = () => {
           <View className="flex-row items-center mt-7">
             <TouchableOpacity
               className="w-10 h-10 rounded-full justify-center items-center mr-2"
-              onPress={() => router.push('/home')}
+              onPress={() => router.push('/main')}
             >
               <Ionicons name="chevron-back-sharp" size={30} color="white" />
             </TouchableOpacity>
@@ -120,7 +122,8 @@ const Add = () => {
             )}
           </View>
 
-          <CustomModal visible={modalVisible} onClose={handleCloseModal} />
+          {modalVisible && <CustomModal visible={modalVisible} onClose={handleCloseModal} />}
+          
         </View>
       </ScrollView>
     </SafeAreaView>
