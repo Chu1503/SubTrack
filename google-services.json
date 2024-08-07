@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "344836126051",
+    "project_id": "subscription-manager-e3745",
+    "storage_bucket": "subscription-manager-e3745.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344836126051:android:2c7d9d1f1e2cf8b4950f56",
+        "android_client_info": {
+          "package_name": "com.muthannamanav2003.Subscription_Manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "344836126051-8mnuak2cca8ekptg7qnsf5og55ffq7kn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.muthannamanav2003.Subscription_Manager",
+            "certificate_hash": "3195ac6463d885d16c953b0e6c577ac2ea1e2658"
+          }
+        },
+        {
+          "client_id": "344836126051-d9va0a4su78oip0e6ttdufmomvn1ar40.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.muthannamanav2003.Subscription_Manager",
+            "certificate_hash": "801bd215435249d9a56e5b839b911d92dc5c7720"
+          }
+        },
+        {
+          "client_id": "344836126051-atraas9973d186o49j49jdqs957fk4vr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCm9mhZMbpiO8V3_xGwSbcKINwEIZULLj8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "344836126051-atraas9973d186o49j49jdqs957fk4vr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
