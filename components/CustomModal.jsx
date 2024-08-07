@@ -1,93 +1,107 @@
-// // CustomModal.jsx
-// import React from 'react';
-// import { View, Text, TouchableOpacity, StyleSheet, Modal, Dimensions } from 'react-native';
-// import { PanGestureHandler, State } from 'react-native-gesture-handler';
-// import Animated, { Easing, useSharedValue, useAnimatedStyle, withSpring, withSpringTransition } from 'react-native-reanimated';
+import React, { useState, useRef, useEffect } from 'react';
+import { Modal, View, Text, Dimensions, ScrollView, TouchableOpacity, Animated, Image } from 'react-native';
+import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
+import CustomCardList from './CustomCardList';
+import { images } from '../constants';
 
-// const { height: screenHeight } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
-// const CustomModal = ({ visible, onClose }) => {
-//   const translateY = useSharedValue(screenHeight);
+const CustomModal = ({ visible, onClose }) => {
+  const [translateY, setTranslateY] = useState(0);
+  const [activeTab, setActiveTab] = useState('List');
+  const panRef = useRef(null);
+  const underlinePosition = useRef(new Animated.Value(0)).current;
 
-//   const animatedStyles = useAnimatedStyle(() => {
-//     return {
-//       transform: [{ translateY: translateY.value }],
-//     };
-//   });
+  useEffect(() => {
+    const index = activeTab === 'List' ? 0 : 1;
+    Animated.timing(underlinePosition, {
+      toValue: width / 2 * index,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  }, [activeTab]);
 
-//   React.useEffect(() => {
-//     translateY.value = withSpring(visible ? 0 : screenHeight, {
-//       damping: 5,
-//       stiffness: 100,
-//       overshootClamping: true,
-//     });
-//   }, [visible]);
+  const handleGesture = ({ nativeEvent }) => {
+    if (nativeEvent.translationY > 0) {
+      setTranslateY(nativeEvent.translationY);
+    }
+  };
 
-//   const handleGestureEvent = Animated.event(
-//     [{ nativeEvent: { translationY: translateY.value } }],
-//     { useNativeDriver: true }
-//   );
+  const handleGestureEnd = ({ nativeEvent }) => {
+    const shouldClose = nativeEvent.translationY > height * 0.3 || nativeEvent.velocityY > 1000;
+    if (shouldClose) {
+      onClose();
+    } else {
+      setTranslateY(0);
+    }
+  };
 
-//   const handleStateChange = ({ nativeEvent }) => {
-//     if (nativeEvent.oldState === State.ACTIVE && nativeEvent.translationY > 100) {
-//       onClose();
-//     }
-//   };
+  const platforms = [
+    { name: 'Prime Video', image: images.primevideo },
+    { name: 'Netflix', image: images.primevideo },
+    { name: 'Hotstar', image: images.primevideo },
+    { name: 'Sony LIV', image: images.primevideo },
+  ];
 
-//   return (
-//     <Modal transparent visible={visible} animationType="none">
-//       <TouchableOpacity style={styles.overlay} onPress={onClose}>
-//         <PanGestureHandler
-//           onGestureEvent={handleGestureEvent}
-//           onHandlerStateChange={handleStateChange}
-//         >
-//           <Animated.View style={[styles.modal, animatedStyles]}>
-//             <View style={styles.header}>
-//               <Text style={styles.title}>Select a Service</Text>
-//               <TouchableOpacity onPress={onClose}>
-//                 <Text style={styles.close}>X</Text>
-//               </TouchableOpacity>
-//             </View>
-//             <View style={styles.content}>
-//               <Text>Select a service from the list below.</Text>
-//               {/* Add your list or content here */}
-//             </View>
-//           </Animated.View>
-//         </PanGestureHandler>
-//       </TouchableOpacity>
-//     </Modal>
-//   );
-// };
+  return (
+    <Modal transparent visible={visible} animationType="slide">
+      <GestureHandlerRootView className="flex-1">
+        <PanGestureHandler
+          ref={panRef}
+          onGestureEvent={handleGesture}
+          onEnded={handleGestureEnd}
+        >
+          <View className="flex-1 justify-end" style={{ transform: [{ translateY }] }}>
+            <View className="h-full bg-[#1e1e2d] rounded-t-[30px] w-full">
+            <Image source={images.dash} resizeMode='contain' className="h-[35px] self-center mt-2" />
+              <View className="relative p-1">
+                <View className="flex-row justify-between mb-2">
+                  <TouchableOpacity
+                    className="flex-1 p-2"
+                    onPress={() => setActiveTab('List')}
+                  >
+                    <Text className={`text-center text-white text-lg font-psemibold`}>
+                      List
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className="flex-1 p-2"
+                    onPress={() => setActiveTab('Custom')}
+                  >
+                    <Text className="text-center text-white text-lg font-psemibold">
+                      Custom
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <Animated.View
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    height: 2,
+                    width: width / 2,
+                    backgroundColor: '#FF9C01',
+                    transform: [{ translateX: underlinePosition }],
+                  }}
+                />
+              </View>
+              {activeTab === 'List' ? (
+                <ScrollView className="p-3">
+                  {platforms.map((platform, index) => (
+                    <CustomCardList key={index} platform={platform.name} image={platform.image} />
+                  ))}
+                </ScrollView>
+              ) : (
+                <View className="flex-1 items-center justify-center">
+                  <Text className="text-white text-xl">Wow Gestures!</Text>
+                </View>
+              )}
+            </View>
+          </View>
+        </PanGestureHandler>
+      </GestureHandlerRootView>
+    </Modal>
+  );
+};
 
-// const styles = StyleSheet.create({
-//   overlay: {
-//     flex: 1,
-//     backgroundColor: 'rgba(0,0,0,0.5)',
-//     justifyContent: 'flex-end',
-//   },
-//   modal: {
-//     backgroundColor: 'white',
-//     padding: 16,
-//     borderTopLeftRadius: 16,
-//     borderTopRightRadius: 16,
-//     height: 300, // Adjust the height as needed
-//   },
-//   header: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//   },
-//   title: {
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//   },
-//   close: {
-//     fontSize: 18,
-//     color: 'red',
-//   },
-//   content: {
-//     marginTop: 20,
-//   },
-// });
-
-// export default CustomModal;
+export default CustomModal;
