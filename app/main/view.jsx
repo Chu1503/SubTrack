@@ -66,7 +66,7 @@ const ViewCard = () => {
             </View>
           </View>
           <TouchableOpacity
-              className="w-[60px] h-[40px] border-2 border-secondary rounded-full justify-center items-center"
+              className="w-[60px] h-[40px] border-2 border-secondary rounded-full justify-center items-center self-center"
               onPress={() => router.push('/main/edit')}
             >
               <MaterialIcons name="edit" size={24} color="#F4CE14" />
