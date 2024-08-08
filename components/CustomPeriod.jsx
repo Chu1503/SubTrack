@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Modal, FlatList, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Modal, FlatList, TouchableWithoutFeedback } from 'react-native';
 
 const CustomPeriod = ({ value, onValueChange, unit, onUnitChange }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [selectedUnit, setSelectedUnit] = useState(unit || 'Day(s)');
+  const [selectedUnit, setSelectedUnit] = useState("Day(s)");
 
   const unitOptions = [
     { label: 'Day(s)', value: 'Day(s)' },
@@ -22,20 +22,20 @@ const CustomPeriod = ({ value, onValueChange, unit, onUnitChange }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Every</Text>
+    <View className="mt-4 items-center">
+      <View className="flex-row items-center">
+        <Text className="text-white text-base font-semibold mr-2">Every</Text>
         <TextInput
-          style={styles.textInput}
+          className="w-16 h-12 p-2 bg-black-100 rounded text-white text-center mr-2 text-base border-2 border-gray"
           value={value}
           onChangeText={onValueChange}
           keyboardType="numeric"
         />
         <TouchableOpacity
-          style={styles.dropdown}
+          className="w-32 h-12 bg-black-100 rounded justify-center p-2 border-2 border-gray"
           onPress={() => setDropdownVisible(!dropdownVisible)}
         >
-          <Text style={styles.dropdownText}>{selectedUnit}</Text>
+          <Text className="text-white text-base text-center font-semibold">{selectedUnit}</Text>
         </TouchableOpacity>
       </View>
 
@@ -47,19 +47,19 @@ const CustomPeriod = ({ value, onValueChange, unit, onUnitChange }) => {
           onRequestClose={handleCloseModal}
         >
           <TouchableWithoutFeedback onPress={handleCloseModal}>
-            <View style={styles.modalOverlay} />
+            <View className="flex-1 bg-black/50" />
           </TouchableWithoutFeedback>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
+          <View className="absolute bottom-0 w-full bg-black-100 rounded-t-3xl">
+            <View className="overflow-hidden">
               <FlatList
                 data={unitOptions}
                 keyExtractor={(item) => item.value}
                 renderItem={({ item }) => (
                   <TouchableOpacity
-                    style={styles.option}
+                    className="p-4"
                     onPress={() => handleSelectUnit(item.value)}
                   >
-                    <Text style={styles.optionText}>{item.label}</Text>
+                    <Text className="text-white text-base text-center">{item.label}</Text>
                   </TouchableOpacity>
                 )}
               />
@@ -70,65 +70,5 @@ const CustomPeriod = ({ value, onValueChange, unit, onUnitChange }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  label: {
-    color: 'white',
-    fontSize: 16,
-    marginRight: 10,
-  },
-  textInput: {
-    width: 50,
-    padding: 10,
-    backgroundColor: '#333',
-    borderRadius: 5,
-    color: 'white',
-    textAlign: 'center',
-    marginRight: 10,
-  },
-  dropdown: {
-    width: 130,
-    backgroundColor: '#333',
-    borderRadius: 5,
-    justifyContent: 'center',
-    textAlign: 'center',
-    padding: 10,
-  },
-  dropdownText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContainer: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    backgroundColor: '#333',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  modalContent: {
-    borderRadius: 5,
-    overflow: 'hidden',
-  },
-  option: {
-    padding: 15,
-  },
-  optionText: {
-    color: 'white',
-    fontSize: 16,
-  },
-});
 
 export default CustomPeriod;
