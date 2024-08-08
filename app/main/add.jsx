@@ -183,45 +183,40 @@ const Add = () => {
               animationType="fade"
               onRequestClose={handleCancelDate}
             >
-              <Pressable 
-                className="flex-1 bg-black/50"
-                onPress={handleCancelDate}
-              >
-                <View className="flex-1 justify-center items-center">
-                  <View className="bg-black-200 border border-gray rounded-xl p-4 w-4/5">
-                    <DatePicker
-                      options={{
-                        backgroundColor: "#202021",
-                        textHeaderColor: "#F4CE14",
-                        textDefaultColor: "white",
-                        selectedTextColor: "black",
-                        mainColor: "#F4CE14",
-                        textSecondaryColor: "white",
-                      }}
-                      current={selectedDate.toISOString().split('T')[0]}
-                      selected={tempDate.toISOString().split('T')[0]}
-                      mode="calendar"
-                      minuteInterval={30}
-                      style={{ borderRadius: 10 }}
-                      onDateChange={handleDateChange}
-                    />
-                    <View className="flex-row justify-between">
-                      <Pressable
-                        className="ml-4 mt-5"
-                        onPress={handleCancelDate}
-                      >
-                        <Text className="text-white text-center font-semibold">Cancel</Text>
-                      </Pressable>
-                      <Pressable
-                        className="mr-4 mt-5"
-                        onPress={handleConfirmDate}
-                      >
-                        <Text className="text-white text-center font-semibold">OK</Text>
-                      </Pressable>
-                    </View>
+              <View className="flex-1 justify-center items-center bg-black/50">
+                <View className="bg-black border border-gray rounded-xl p-4 w-[90%]">
+                  <DatePicker
+                    options={{
+                      backgroundColor: "#202021",
+                      textHeaderColor: "#F4CE14",
+                      textDefaultColor: "white",
+                      selectedTextColor: "black",
+                      mainColor: "#F4CE14",
+                      textSecondaryColor: "white",
+                    }}
+                    current={selectedDate.toISOString().split('T')[0]}
+                    selected={tempDate.toISOString().split('T')[0]}
+                    mode="calendar"
+                    minuteInterval={30}
+                    style={{ borderRadius: 10 }}
+                    onDateChange={handleDateChange}
+                  />
+                  <View className="flex-row justify-between mt-4">
+                    <Pressable
+                      className="ml-4 mt-3 mb-3"
+                      onPress={handleCancelDate}
+                    >
+                      <Text className="text-white text-center font-semibold text-md">Cancel</Text>
+                    </Pressable>
+                    <Pressable
+                      className="mr-4 mt-3 mb-3"
+                      onPress={handleConfirmDate}
+                    >
+                      <Text className="text-white text-center font-semibold text-md">Ok</Text>
+                    </Pressable>
                   </View>
                 </View>
-              </Pressable>
+              </View>
             </Modal>
           )}
         </View>
