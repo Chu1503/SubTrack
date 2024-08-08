@@ -15,6 +15,7 @@ import CustomModal from "../../components/CustomModal";
 import CustomPeriod from "../../components/CustomPeriod";
 import colors from "../../constants/colors";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useColorScheme } from 'react-native';
 
 const Add = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -26,6 +27,8 @@ const Add = () => {
   const [customPeriodValue, setCustomPeriodValue] = useState("1");
   const [customPeriodUnit, setCustomPeriodUnit] = useState("Day");
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const colorScheme = useColorScheme();
+  const datePickerColor = colorScheme === 'dark' ? 'white' : 'black';
 
   const handleOpenModal = () => {
     console.log("Opening modal"); // Debug
@@ -125,20 +128,18 @@ const Add = () => {
                 (period) => (
                   <TouchableOpacity
                     key={period}
-                    className={`flex-1 p-3 rounded-lg mx-1 mb-2 border-2 border-gray ${
-                      selectedPeriod === period
+                    className={`flex-1 p-3 rounded-lg mx-1 mb-2 border-2 border-gray ${selectedPeriod === period
                         ? "bg-secondary"
                         : "bg-black-100"
-                    }`}
+                      }`}
                     style={{ minWidth: 120 }}
                     onPress={() => handlePeriodSelect(period)}
                   >
                     <Text
-                      className={`text-center font-semibold ${
-                        selectedPeriod === period
+                      className={`text-center font-semibold ${selectedPeriod === period
                           ? "text-primary"
                           : "text-white"
-                      }`}
+                        }`}
                     >
                       {period}
                     </Text>
@@ -170,6 +171,7 @@ const Add = () => {
               mode="date"
               display="default"
               onChange={handleDateChange}
+              textColor={datePickerColor}
             />
           )}
         </View>
