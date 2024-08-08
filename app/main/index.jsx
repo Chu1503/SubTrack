@@ -48,6 +48,8 @@ const Home = () => {
   const [userName, setuserName] = useState("");
   const router = useRouter();
 
+  const backend_url = "https://subtrack-backend.duckdns.org"
+
   useEffect(() => {
     GoogleSignin.configure();
   }, []);
@@ -68,7 +70,7 @@ const Home = () => {
 
   const fetchSubscriptions = async () => {
     try {
-      const response = await axios.get('http://68.233.114.188:5000/sub/991830116710023169');
+      const response = await axios.get(`${backend_url}/sub/991830116710023169`);
       setSubscriptions(response.data);
       setMonthlyPrice(calculateMonthlyPrice(response.data));
     } catch (error) {
