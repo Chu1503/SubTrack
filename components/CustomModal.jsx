@@ -4,6 +4,8 @@ import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-
 import CustomCardList from './CustomCardList';
 import CustomServiceModal from './CustomServiceModal';
 import { images } from '../constants';
+import colors from '../constants/colors';
+
 
 const { height, width } = Dimensions.get('window');
 
@@ -54,7 +56,7 @@ const CustomModal = ({ visible, onClose }) => {
 
   const platforms = [
     { name: 'Prime Video', image: images.primevideo },
-    { name: 'Netflix', image: images.primevideo },
+    { name: 'Netflix', image: images.netflix },
     { name: 'Hotstar', image: images.primevideo },
     { name: 'Sony LIV', image: images.primevideo },
   ];
@@ -69,7 +71,7 @@ const CustomModal = ({ visible, onClose }) => {
             onEnded={handleGestureEnd}
           >
             <View className="flex-1 justify-end" style={{ transform: [{ translateY }] }}>
-              <View className="h-full bg-[#1e1e2d] rounded-t-[30px] w-full">
+              <View className="h-full bg-black-100 rounded-t-[30px] w-full">
                 <Image source={images.dash} resizeMode='contain' className="h-[35px] self-center mt-2" />
                 <View className="relative p-1">
                   <View className="flex-row justify-between mb-2">
@@ -77,7 +79,7 @@ const CustomModal = ({ visible, onClose }) => {
                       className="flex-1 p-2"
                       onPress={() => setActiveTab('List')}
                     >
-                      <Text className={`text-center text-white text-lg font-psemibold`}>
+                      <Text className={`text-center text-white text-xl font-psemibold`}>
                         List
                       </Text>
                     </TouchableOpacity>
@@ -85,7 +87,7 @@ const CustomModal = ({ visible, onClose }) => {
                       className="flex-1 p-2"
                       onPress={() => setActiveTab('Custom')}
                     >
-                      <Text className="text-center text-white text-lg font-psemibold">
+                      <Text className="text-center text-white text-xl font-psemibold">
                         Custom
                       </Text>
                     </TouchableOpacity>
@@ -97,7 +99,7 @@ const CustomModal = ({ visible, onClose }) => {
                       left: 0,
                       height: 2,
                       width: width / 2,
-                      backgroundColor: '#FF9C01',
+                      backgroundColor: colors.secondary.DEFAULT,
                       transform: [{ translateX: underlinePosition }],
                     }}
                   />
@@ -110,7 +112,7 @@ const CustomModal = ({ visible, onClose }) => {
                   </ScrollView>
                 ) : (
                   <View className="flex-1 items-center justify-start">
-                    <TouchableOpacity onPress={handleOpenForm} className="bg-[#FF9C01] p-3 rounded-full w-[90vw] mt-10">
+                    <TouchableOpacity onPress={handleOpenForm} className="bg-secondary p-3 rounded-full w-[90vw] mt-10">
                       <Text className="text-primary text-center text-lg">Add Custom Service</Text>
                     </TouchableOpacity>
                   </View>

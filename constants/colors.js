@@ -1,19 +1,37 @@
+// const colors = {
+//   primary: "#1a1321",
+//   secondary: {
+//     DEFAULT: "#FF69B4",
+//     100: "#007a64",
+//     200: "#007a64",
+//   },
+//   black: {
+//     DEFAULT: "#000",
+//     100: "#272334",
+//     200: "#272334",
+//   },
+//   gray: {
+//     100: "#CDCDE0",
+//   },
+// };
+
+// module.exports = colors;
+
 const colors = {
-    primary: "#161622",
-    secondary: {
-    //   DEFAULT: "#8736C7",
-    DEFAULT: "#FF9C01",
-      100: "#FF9001",
-      200: "#FF8E01",
-    },
-    black: {
-      DEFAULT: "#000",
-      100: "#1E1E2D",
-      200: "#232533",
-    },
-    gray: {
-      100: "#CDCDE0",
-    },
-  };
-  
-  module.exports = colors;  
+  primary: "#161617",
+  secondary: {
+    DEFAULT: "#F4CE14",
+    100: "#007a64",
+    200: "#007a64",
+  },
+  black: {
+    DEFAULT: "#000",
+    100: "#202021",
+    200: "#202021",
+  },
+  gray: {
+    100: "#CDCDE0",
+  },
+};
+
+module.exports = colors;

@@ -45,7 +45,7 @@ export default function Welcome() {
           <View className="relative mt-5 w-full">
             <Text className="text-[45px] text-white font-bold text-left">
               Manage all your subscriptions {"\n"}
-              <Text className="text-secondary-200">in one place!</Text>
+              <Text className="text-secondary">in one place!</Text>
             </Text>
           </View>
           <CustomButton

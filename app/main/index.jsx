@@ -126,10 +126,10 @@ const Home = () => {
               <Text className="text-secondary text-3xl">+</Text>
             </TouchableOpacity>
           </View>
-          <Text className="text-lg text-white text-regular mt-7 font-pbold text-center">Hello <Text className="text-secondary">{userName}</Text>!</Text>
-          <Text className="text-lg text-white text-regular mt-5 font-pmedium">Monthly</Text>
-          <Text className="text-5xl text-secondary mt-2 font-pbold pt-3">₹{monthlyPrice.toFixed(2)}</Text>
-          <Text className="text-md text-white text-regular font-pmedium mb-2">Updated on XX/XX/XXXX</Text>
+          <Text className="text-xl text-white mt-7 font-pbold text-center">Hello <Text className="text-secondary">{userName}</Text>!</Text>
+          <Text className="text-lg text-white text-regular mt-5 font-pmedium">Monthly Spending</Text>
+          <Text className="text-5xl text-secondary mt-1 mb-1 font-pbold pt-1">₹{monthlyPrice.toFixed(2)}</Text>
+          {/* <Text className="text-md text-white text-regular font-pmedium mb-2">Updated on XX/XX/XXXX</Text> */}
           {subscriptions.map(subscription => (
             <CustomCard
               key={subscription.ID}

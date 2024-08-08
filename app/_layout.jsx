@@ -8,15 +8,15 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 const RootLayout = () => {
   const [isSignedIn, setIsSignedIn] = useState(null); // Change to null initially
   const [fontsLoaded, error] = useFonts({
-    "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
-    "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
-    "Poppins-ExtraBold": require("../assets/fonts/Poppins-ExtraBold.ttf"),
-    "Poppins-ExtraLight": require("../assets/fonts/Poppins-ExtraLight.ttf"),
-    "Poppins-Light": require("../assets/fonts/Poppins-Light.ttf"),
-    "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
-    "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
-    "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
-    "Poppins-Thin": require("../assets/fonts/Poppins-Thin.ttf"),
+    "TT-Norms-Pro-Black": require("../assets/fonts/TT-Norms-Pro-Black.otf"),
+    "TT-Norms-Pro-Bold": require("../assets/fonts/TT-Norms-Pro-Bold.otf"),
+    "TT-Norms-Pro-ExtraBold": require("../assets/fonts/TT-Norms-Pro-ExtraBold.otf"),
+    "TT-Norms-Pro-ExtraLight": require("../assets/fonts/TT-Norms-Pro-ExtraLight.otf"),
+    "TT-Norms-Pro-Light": require("../assets/fonts/TT-Norms-Pro-Light.otf"),
+    "TT-Norms-Pro-Medium": require("../assets/fonts/TT-Norms-Pro-Medium.otf"),
+    "TT-Norms-Pro-Regular": require("../assets/fonts/TT-Norms-Pro-Regular.otf"),
+    "TT-Norms-Pro-SemiBold": require("../assets/fonts/TT-Norms-Pro-SemiBold.otf"),
+    "TT-Norms-Pro-Thin": require("../assets/fonts/TT-Norms-Pro-Thin.otf"),
   });
 
   useEffect(() => {
