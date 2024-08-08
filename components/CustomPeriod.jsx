@@ -1,45 +1,72 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Modal, FlatList, TouchableWithoutFeedback } from 'react-native';
 
-const CustomPeriod = ({ value, onValueChange, unit, onUnitChange, dropdownVisible, onDropdownToggle, onDropdownSelect }) => {
-  const currentUnit = `${unit}(s)`;
+const CustomPeriod = ({ value, onValueChange, unit, onUnitChange }) => {
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [selectedUnit, setSelectedUnit] = useState("Day(s)");
+
+  const unitOptions = [
+    { label: 'Day(s)', value: 'Day(s)' },
+    { label: 'Month(s)', value: 'Month(s)' },
+    { label: 'Year(s)', value: 'Year(s)' },
+  ];
+
+  const handleSelectUnit = (unit) => {
+    setSelectedUnit(unit);
+    onUnitChange(unit);
+    setDropdownVisible(false);
+  };
+
+  const handleCloseModal = () => {
+    setDropdownVisible(false);
+  };
 
   return (
-    <View className="mt-3 items-center">
+    <View className="mt-4 items-center">
       <View className="flex-row items-center">
-        <Text className="text-white text-center text-base mr-2 font-pmedium">Every</Text>
+        <Text className="text-white text-base font-semibold mr-2">Every</Text>
         <TextInput
-          className="w-20 p-2 bg-gray-800 rounded-md text-white text-center"
+          className="w-16 h-12 p-2 bg-black-100 rounded text-white text-center mr-2 text-base border-2 border-gray"
           value={value}
           onChangeText={onValueChange}
           keyboardType="numeric"
         />
-        <View style={{ position: 'relative' }}>
-          <TouchableOpacity
-            className="w-24 p-2 bg-gray-800 rounded-md border border-gray-600 justify-center"
-            onPress={onDropdownToggle}
-          >
-            <Text className="text-white text-base">{currentUnit}</Text>
-          </TouchableOpacity>
-
-          {dropdownVisible && (
-            <View
-              className="bg-gray-800 rounded-md border border-gray-600 w-24 mt-1"
-              style={{ position: 'absolute', top: '100%', zIndex: 1 }}
-            >
-              {['Day', 'Month', 'Year'].map((unit) => (
-                <TouchableOpacity
-                  key={unit}
-                  className="p-2 border-b border-gray-600 justify-center"
-                  onPress={() => onDropdownSelect(unit)}
-                >
-                  <Text className="text-white text-base">{`${unit}(s)`}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-        </View>
+        <TouchableOpacity
+          className="w-32 h-12 bg-black-100 rounded justify-center p-2 border-2 border-gray"
+          onPress={() => setDropdownVisible(!dropdownVisible)}
+        >
+          <Text className="text-white text-base text-center font-semibold">{selectedUnit}</Text>
+        </TouchableOpacity>
       </View>
+
+      {dropdownVisible && (
+        <Modal
+          transparent={true}
+          animationType="fade"
+          visible={dropdownVisible}
+          onRequestClose={handleCloseModal}
+        >
+          <TouchableWithoutFeedback onPress={handleCloseModal}>
+            <View className="flex-1 bg-black/50" />
+          </TouchableWithoutFeedback>
+          <View className="absolute bottom-0 w-full bg-black-100 rounded-t-3xl">
+            <View className="overflow-hidden">
+              <FlatList
+                data={unitOptions}
+                keyExtractor={(item) => item.value}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    className="p-4"
+                    onPress={() => handleSelectUnit(item.value)}
+                  >
+                    <Text className="text-white text-base text-center">{item.label}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          </View>
+        </Modal>
+      )}
     </View>
   );
 };

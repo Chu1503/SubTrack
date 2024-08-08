@@ -1,45 +1,70 @@
-import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import Entypo from '@expo/vector-icons/Entypo';
-import { router } from 'expo-router';
-import CustomField from '../../components/CustomField';
-import CustomModal from '../../components/CustomModal';
-import CustomPeriod from '../../components/CustomPeriod';
-import colors from '../../constants/colors';
+import React, { useState } from "react";
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  Text,
+  Pressable,
+  Modal,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import Entypo from "@expo/vector-icons/Entypo";
+import { router } from "expo-router";
+import CustomField from "../../components/CustomField";
+import CustomModal from "../../components/CustomModal";
+import CustomPeriod from "../../components/CustomPeriod";
+import colors from "../../constants/colors";
+import DatePicker from 'react-native-modern-datepicker';
 
 const Add = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [price, setPrice] = useState('');
-  const [selectedPeriod, setSelectedPeriod] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [tempDate, setTempDate] = useState(new Date()); // Track temporary date
+  const [price, setPrice] = useState("");
+  const [selectedPeriod, setSelectedPeriod] = useState("");
   const [customPeriodVisible, setCustomPeriodVisible] = useState(false);
-  const [customPeriodValue, setCustomPeriodValue] = useState('1');
-  const [customPeriodUnit, setCustomPeriodUnit] = useState('Day');
+  const [customPeriodValue, setCustomPeriodValue] = useState("1");
+  const [customPeriodUnit, setCustomPeriodUnit] = useState("Day");
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const handleOpenModal = () => {
-    console.log('Opening modal'); // Debug
     setModalVisible(true);
   };
 
   const handleCloseModal = () => {
-    console.log('Closing modal'); // Debug
     setModalVisible(false);
   };
 
   const handleOpenDatePicker = () => {
+    setTempDate(selectedDate); // Save the current date as temporary
     setDatePickerVisible(true);
   };
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
+    const [year, month, day] = date.split('/'); // Split the date string
+    const formattedDate = `${year}-${month}-${day}`; // Convert to YYYY-MM-DD format
+    const parsedDate = new Date(formattedDate);
+    if (!isNaN(parsedDate.getTime())) {
+      setTempDate(parsedDate); // Update temporary date
+    } else {
+      console.warn("Invalid Date:", date);
+    }
+  };
+
+  const handleConfirmDate = () => {
+    setSelectedDate(tempDate); // Confirm the new date
+    setDatePickerVisible(false); // Close the picker
+  };
+
+  const handleCancelDate = () => {
+    setTempDate(selectedDate); // Revert to the original date
+    setDatePickerVisible(false); // Close the picker
   };
 
   const handlePeriodSelect = (period) => {
     setSelectedPeriod(period);
-    setCustomPeriodVisible(period === 'Custom');
+    setCustomPeriodVisible(period === "Custom");
   };
 
   const handleDropdownToggle = () => {
@@ -56,13 +81,15 @@ const Add = () => {
       <ScrollView>
         <View className="w-full justify-center h-full px-4 my-6">
           <View className="flex-row items-center mt-7">
-            <TouchableOpacity
+            <Pressable
               className="w-10 h-10 rounded-full justify-center items-center mr-2"
-              onPress={() => router.push('/main')}
+              onPress={() => router.push("/main")}
             >
               <Ionicons name="chevron-back-sharp" size={30} color="white" />
-            </TouchableOpacity>
-            <Text className="text-white text-2xl font-bold">New Subscription</Text>
+            </Pressable>
+            <Text className="text-white text-2xl font-bold">
+              New Subscription
+            </Text>
           </View>
 
           <View className="mt-1">
@@ -71,15 +98,27 @@ const Add = () => {
               placeholder="Select a service"
               onPress={handleOpenModal}
               otherStyles="my-2"
-              innerText={<Entypo name="list" size={24} color={colors.secondary.DEFAULT} />}
+              innerText={
+                <Entypo
+                  name="list"
+                  size={24}
+                  color={colors.secondary.DEFAULT}
+                />
+              }
               editable={false}
             />
             <CustomField
               title="Billing Date"
-              placeholder={selectedDate ? selectedDate.toDateString() : "Select a payday"}
+              placeholder={selectedDate instanceof Date && !isNaN(selectedDate) ? selectedDate.toDateString() : "Select a payday"}
               onPress={handleOpenDatePicker}
               otherStyles="my-2"
-              innerText={<Entypo name="calendar" size={24} color={colors.secondary.DEFAULT} />}
+              innerText={
+                <Entypo
+                  name="calendar"
+                  size={24}
+                  color={colors.secondary.DEFAULT}
+                />
+              }
               editable={false}
             />
             <CustomField
@@ -91,23 +130,33 @@ const Add = () => {
               prefix="₹"
               otherStyles="my-2"
             />
-            <Text className="text-base text-gray-100 font-medium my-2">Period</Text>
+            <Text className="text-base text-gray-100 font-medium my-2">
+              Period
+            </Text>
 
             <View className="flex-row flex-wrap justify-between mt-2">
-              {['Monthly', 'Semi-Annually', 'Annually', 'Custom'].map((period) => (
-                <TouchableOpacity
-                  key={period}
-                  className={`flex-1 p-3 rounded-md mx-1 mb-2 ${
-                    selectedPeriod === period ? 'bg-secondary' : 'bg-black-100'
-                  }`}
-                  style={{ minWidth: 120 }}
-                  onPress={() => handlePeriodSelect(period)}
-                >
-                  <Text className="text-center text-white font-semibold">
-                    {period}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+              {["Monthly", "Semi-Annually", "Annually", "Custom"].map(
+                (period) => (
+                  <Pressable
+                    key={period}
+                    className={`flex-1 p-3 rounded-lg mx-1 mb-2 border-2 border-gray ${selectedPeriod === period
+                        ? "bg-secondary"
+                        : "bg-black-100"
+                      }`}
+                    style={{ minWidth: 120 }}
+                    onPress={() => handlePeriodSelect(period)}
+                  >
+                    <Text
+                      className={`text-center font-semibold ${selectedPeriod === period
+                          ? "text-primary"
+                          : "text-white"
+                        }`}
+                    >
+                      {period}
+                    </Text>
+                  </Pressable>
+                )
+              )}
             </View>
 
             {customPeriodVisible && (
@@ -123,8 +172,53 @@ const Add = () => {
             )}
           </View>
 
-          {modalVisible && <CustomModal visible={modalVisible} onClose={handleCloseModal} />}
-          
+          {modalVisible && (
+            <CustomModal visible={modalVisible} onClose={handleCloseModal} />
+          )}
+
+          {datePickerVisible && (
+            <Modal
+              transparent
+              visible={datePickerVisible}
+              animationType="fade"
+              onRequestClose={handleCancelDate}
+            >
+              <View className="flex-1 justify-center items-center bg-black/50">
+                <View className="bg-black border border-gray rounded-xl p-4 w-[90%]">
+                  <DatePicker
+                    options={{
+                      backgroundColor: "#202021",
+                      textHeaderColor: "#F4CE14",
+                      textDefaultColor: "white",
+                      selectedTextColor: "black",
+                      mainColor: "#F4CE14",
+                      textSecondaryColor: "white",
+                    }}
+                    current={selectedDate.toISOString().split('T')[0]}
+                    selected={tempDate.toISOString().split('T')[0]}
+                    mode="calendar"
+                    minuteInterval={30}
+                    style={{ borderRadius: 10 }}
+                    onDateChange={handleDateChange}
+                  />
+                  <View className="flex-row justify-between mt-4">
+                    <Pressable
+                      className="ml-4 mt-3 mb-3"
+                      onPress={handleCancelDate}
+                    >
+                      <Text className="text-white text-center font-semibold text-md">Cancel</Text>
+                    </Pressable>
+                    <Pressable
+                      className="mr-4 mt-3 mb-3"
+                      onPress={handleConfirmDate}
+                    >
+                      <Text className="text-white text-center font-semibold text-md">Ok</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              </View>
+            </Modal>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
