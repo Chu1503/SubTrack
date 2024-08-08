@@ -158,7 +158,6 @@ const Add = () => {
                 )
               )}
             </View>
-
             {customPeriodVisible && (
               <CustomPeriod
                 value={customPeriodValue}

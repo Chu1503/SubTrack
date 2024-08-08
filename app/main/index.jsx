@@ -136,7 +136,7 @@ const Home = () => {
               platform={subscription.name}
               date={new Date(subscription.start_date).toLocaleDateString()}
               price={`₹${subscription.price}`}
-            />
+              onPress={() => router.push('/main/view')}            />
           ))}
           <View className="mb-10"></View>
         </View>

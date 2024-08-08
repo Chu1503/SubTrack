@@ -5,6 +5,7 @@ export default function MainLayout() {
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="add" options={{ headerShown: false }} />
+      <Stack.Screen name="view" options={{ headerShown: false }} />
       {/* Add other screens as needed */}
     </Stack>
   );

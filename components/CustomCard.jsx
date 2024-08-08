@@ -1,10 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import { images } from "../constants"
+import { images } from "../constants";
 
-const CustomCard = ({ platform, date, price }) => {
-return (
-    <TouchableOpacity className="min-h-[60px] bg-black-100 rounded-3xl shadow-md p-4 mt-3 border-2 border-gray">
+const CustomCard = ({ platform, date, price, onPress }) => {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      className="min-h-[60px] bg-black-100 rounded-3xl shadow-md p-4 mt-3 border-2 border-gray"
+    >
       <View className="flex-row items-center">
         <Image source={images.primevideo} className="w-[50px] h-[50px] mr-4" />
         
@@ -20,7 +23,7 @@ return (
         </View>
       </View>
     </TouchableOpacity>
-    );
+  );
 };
 
-export default CustomCard
+export default CustomCard;
