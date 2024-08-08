@@ -112,7 +112,7 @@ const CustomModal = ({ visible, onClose }) => {
                   </ScrollView>
                 ) : (
                   <View className="flex-1 items-center justify-start">
-                    <TouchableOpacity onPress={handleOpenForm} className="bg-secondary p-3 rounded-full w-[90vw] mt-10">
+                    <TouchableOpacity onPress={handleOpenForm} className="bg-secondary p-3 rounded-full w-[90vw] mt-10 border-2 border-gray">
                       <Text className="text-primary text-center text-lg">Add Custom Service</Text>
                     </TouchableOpacity>
                   </View>

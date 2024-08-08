@@ -15,7 +15,7 @@ const CustomField = ({
     <View className={`space-y-2 ${otherStyles}`}>
       <Text className="text-regular text-base text-gray-100 font-medium">{title}</Text>
       <TouchableOpacity
-        className="w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-secondary flex flex-row items-center"
+        className="w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-gray flex flex-row items-center"
         onPress={onPress}
       >
         {prefix && <Text className="text-white font-semibold text-base mr-2">{prefix}</Text>}
