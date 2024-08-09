@@ -153,7 +153,7 @@ const Home = () => {
             <CustomCard
               key={subscription.ID}
               platform={subscription.name}
-              date={new Date(subscription.start_date).toLocaleDateString()}
+              date={new Date(subscription.start_date).toLocaleDateString('en-GB')}
               price={`₹${subscription.price}`}
             />
           ))}
