@@ -15,3 +15,8 @@ func ValidateSub(sub models.Sub) error {
 	_, err := govalidator.ValidateStruct(sub)
 	return err
 }
+
+func ValidateStruct(s interface{}) error {
+	_, err := govalidator.ValidateStruct(s)
+	return err
+}

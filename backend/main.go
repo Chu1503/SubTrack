@@ -27,6 +27,12 @@ func main() {
 	//Get all subs of a user
 	app.Get("/sub/:user_id", routes.GetSubs)
 
+	//Push custom services array of a user
+	app.Post("/service", routes.CreateService)
+
+	//Get all services of a user
+	app.Get("/service/:user_id", routes.GetServices)
+
 	// Start the Fiber app
 	port := 8080
 	fmt.Printf("Server is running on http://localhost:%d\n", port)

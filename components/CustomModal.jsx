@@ -5,17 +5,39 @@ import CustomCardList from './CustomCardList';
 import CustomServiceModal from './CustomServiceModal';
 import { images } from '../constants';
 import colors from '../constants/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 
 const { height, width } = Dimensions.get('window');
 
 const CustomModal = ({ visible, onClose, onSelectService }) => {
+  const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL
   const [translateY, setTranslateY] = useState(0);
   const [activeTab, setActiveTab] = useState('List');
   const [formVisible, setFormVisible] = useState(false);
   const [serviceName, setServiceName] = useState('');
+  const [customPlatforms, setCustomPlatforms] = useState([]);
   const panRef = useRef(null);
   const underlinePosition = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Function to fetch custom services from the backend
+    const fetchCustomPlatforms = async () => {
+      const user = await AsyncStorage.getItem('user');
+      const userData = JSON.parse(user);
+      const userId = userData.user.id
+      try {
+        const response = await axios.get(`${backend_url}/service/${userId}`);
+        const data = response.data.services;
+        setCustomPlatforms(data || []);
+      } catch (error) {
+        console.error('Failed to fetch custom platforms:', error);
+      }
+    };
+
+    fetchCustomPlatforms();
+  }, []);
 
   useEffect(() => {
     const index = activeTab === 'List' ? 0 : 1;
@@ -51,9 +73,43 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
   };
 
   const handleSubmitForm = () => {
-    console.log(serviceName);
+    if (serviceName) {
+      // Update state and handle the API call within the state update callback
+      setCustomPlatforms(prev => {
+        const updatedPlatforms = [...prev, serviceName];
+  
+        // Function to update custom platforms on the backend
+        const updateCustomPlatforms = async () => {
+          const user = await AsyncStorage.getItem('user');
+          const userData = JSON.parse(user);
+          const userId = userData.user.id;
+  
+          const post_data = {
+            "user_id": userId,
+            "custom": {"services": updatedPlatforms}
+          };
+  
+          try {
+            const response = await axios.post(`${backend_url}/service`, post_data);
+            console.log('Response from server:', response.data);
+          } catch (error) {
+            console.error('Failed to update custom platforms:', error);
+          }
+        };
+  
+        // Call the function to update the backend
+        updateCustomPlatforms();
+  
+        // Reset serviceName and close the form
+        setServiceName('');
+        handleCloseForm();
+  
+        // Return the updated platforms to set the new state
+        return updatedPlatforms;
+      });
+    }
   };
-
+  
   const handleSelectService = (serviceName) => {
     console.log(serviceName)
     onSelectService(serviceName); // Call the callback with the selected service
@@ -117,11 +173,16 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
                     ))}
                   </ScrollView>
                 ) : (
-                  <View className="flex-1 items-center justify-start">
-                    <TouchableOpacity onPress={handleOpenForm} className="bg-secondary p-3 rounded-full w-[90vw] mt-10 border-2 border-gray">
-                      <Text className="text-primary text-center text-lg">Add Custom Service</Text>
-                    </TouchableOpacity>
-                  </View>
+                  <ScrollView className="p-3">
+                    <View className="flex-1 items-center justify-start">
+                      <TouchableOpacity onPress={handleOpenForm} className="bg-secondary p-3 rounded-full w-[90vw] mt-10 border-2 border-gray">
+                        <Text className="text-primary text-center text-lg">Add Custom Service</Text>
+                      </TouchableOpacity>
+                    </View>
+                    {customPlatforms.map((service, index) => (
+                      <CustomCardList key={index} platform={service} image={images.google} onPress={() => handleSelectService(service)} />
+                    ))}
+                  </ScrollView>
                 )}
               </View>
             </View>
