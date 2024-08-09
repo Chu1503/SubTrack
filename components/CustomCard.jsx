@@ -5,7 +5,8 @@ import { images } from "../constants";
 const CustomCard = ({ platform, date, price }) => {
   // Helper function to determine image source based on platform
   const getImageSource = (platform) => {
-    switch (platform.toLowerCase()) {
+    const resultString = platform.replace(/\s+/g, '').toLowerCase();
+    switch (resultString.toLowerCase()) {
       case 'primevideo':
         return images.primevideo;
       case 'netflix':
