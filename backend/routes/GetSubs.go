@@ -11,11 +11,7 @@ import (
 )
 
 func GetSubs(c *fiber.Ctx) error {
-	userIDParam := c.Params("user_id")
-	userID, err := strconv.Atoi(userIDParam)
-	if err != nil {
-		return c.Status(400).SendString("Invalid user ID")
-	}
+	userID := c.Params("user_id")
 
 	// Query the database for subscriptions belonging to the user
 	var subs []models.Sub
@@ -36,6 +32,8 @@ func GetSubs(c *fiber.Ctx) error {
 			endDate = subs[i].StartDate.AddDate(0, 1, 0) // Adds one month
 		case subs[i].Frequency == "annually":
 			endDate = subs[i].StartDate.AddDate(1, 0, 0) // Adds one year
+		case subs[i].Frequency == "semi-annually":
+			endDate = subs[i].StartDate.AddDate(0, 6, 0) // Adds six months
 		case strings.HasPrefix(subs[i].Frequency, "custom:"):
 			durationStr := strings.TrimPrefix(subs[i].Frequency, "custom:")
 			unit := durationStr[len(durationStr)-1:]

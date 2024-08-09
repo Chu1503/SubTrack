@@ -6,6 +6,8 @@ import {
   Text,
   Pressable,
   Modal,
+  TouchableOpacity,
+  Alert
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
@@ -15,6 +17,8 @@ import CustomModal from "../../components/CustomModal";
 import CustomPeriod from "../../components/CustomPeriod";
 import colors from "../../constants/colors";
 import DatePicker from 'react-native-modern-datepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const Add = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,6 +31,9 @@ const Add = () => {
   const [customPeriodValue, setCustomPeriodValue] = useState("1");
   const [customPeriodUnit, setCustomPeriodUnit] = useState("Day");
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [serviceName, setServiceName] = useState('');
+
+  const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL
 
   const handleOpenModal = () => {
     setModalVisible(true);
@@ -76,6 +83,63 @@ const Add = () => {
     setDropdownVisible(false);
   };
 
+  const handleSelectService = (selectedService) => {
+    setServiceName(selectedService); // Update the service name
+  };
+
+  const validateFields = () => {
+    if (!serviceName.trim()) {
+      Alert.alert("Error Adding Subsciption", "Choose a service");
+      return false;
+    }
+    if (!price.trim() || isNaN(parseFloat(price)) || parseFloat(price) <= 0) {
+      Alert.alert("Error Adding Subsciption", "Enter an amount");
+      return false;
+    }
+    if (!selectedDate) {
+      Alert.alert("Error Adding Subsciption", "Select a valid date");
+      return false;
+    }
+    if (!selectedPeriod) {
+      Alert.alert("Error Adding Subsciption", "Select a period");
+      return false;
+    }
+    if (selectedPeriod === 'Custom' && (isNaN(parseInt(customPeriodValue)) || parseInt(customPeriodValue) <= 0)) {
+      Alert.alert("Error Adding Subsciption", "Custom period value must be a positive number.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async () => {
+    const user = await AsyncStorage.getItem('user');
+    const userData = JSON.parse(user);
+    const userId = userData.user.id
+    if (validateFields()) {
+      const data = {
+        user_id: userId, // Ensure this is set appropriately
+        name: serviceName,
+        price: parseFloat(price),
+        start_date: selectedDate.toISOString(), // Convert date to ISO 8601 format
+        status: 'active', // Initial status
+        frequency: selectedPeriod === 'Custom'
+          ? `custom:${customPeriodValue}${customPeriodUnit.charAt(0).toLowerCase()}`
+          : selectedPeriod.toLowerCase(), // Format frequency as needed
+      };
+      
+      // Perform the API request or other actions
+      console.log("Subscription data:", data);
+      try{
+        const response = await axios.post(`${backend_url}/sub`, data);
+        console.log('Sub creation response:', response.data);
+      }catch(err){
+        console.error(err);
+      }
+      router.replace("/main")
+    }
+  };
+
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
@@ -95,7 +159,7 @@ const Add = () => {
           <View className="mt-1">
             <CustomField
               title="Service"
-              placeholder="Select a service"
+              placeholder={serviceName || "Select a service"}
               onPress={handleOpenModal}
               otherStyles="my-2"
               innerText={
@@ -140,16 +204,16 @@ const Add = () => {
                   <Pressable
                     key={period}
                     className={`flex-1 p-3 rounded-lg mx-1 mb-2 border-2 border-gray ${selectedPeriod === period
-                        ? "bg-secondary"
-                        : "bg-black-100"
+                      ? "bg-secondary"
+                      : "bg-black-100"
                       }`}
                     style={{ minWidth: 120 }}
                     onPress={() => handlePeriodSelect(period)}
                   >
                     <Text
                       className={`text-center font-semibold ${selectedPeriod === period
-                          ? "text-primary"
-                          : "text-white"
+                        ? "text-primary"
+                        : "text-white"
                         }`}
                     >
                       {period}
@@ -173,7 +237,7 @@ const Add = () => {
           </View>
 
           {modalVisible && (
-            <CustomModal visible={modalVisible} onClose={handleCloseModal} />
+            <CustomModal visible={modalVisible} onClose={handleCloseModal} onSelectService={handleSelectService} /> // Pass the callback
           )}
 
           {datePickerVisible && (
@@ -219,6 +283,11 @@ const Add = () => {
               </View>
             </Modal>
           )}
+          <View className="flex-row justify-between">
+            <TouchableOpacity onPress={handleSubmit} className="bg-secondary p-2 rounded-full w-[90vw] mt-5">
+              <Text className="text-primary text-center text-base">Add Subscription</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

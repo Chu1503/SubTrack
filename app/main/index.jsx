@@ -75,19 +75,23 @@ const Home = () => {
         // Handle successful user creation (if needed)
       }catch(err){
         if (err.response.data === "User already exists"){
-          console.log(err.response.data);
+          console.log(err.response.data + " in the DB");
         }
       }
     }
   };
 
   const fetchSubscriptions = async () => {
+    const user = await AsyncStorage.getItem('user');
+    const userData = JSON.parse(user);
+    const userId = userData.user.id
+
     try {
-      const response = await axios.get(`${backend_url}/sub/991830116710023169`);
+      const response = await axios.get(`${backend_url}/sub/${userId}`);
       setSubscriptions(response.data);
       setMonthlyPrice(calculateMonthlyPrice(response.data));
     } catch (error) {
-      console.error("Error fetching subscriptions:", error);
+      console.error("Error fetching subscriptions:", error.response.data);
     }
   };
 

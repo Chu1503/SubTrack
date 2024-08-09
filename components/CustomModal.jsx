@@ -9,7 +9,7 @@ import colors from '../constants/colors';
 
 const { height, width } = Dimensions.get('window');
 
-const CustomModal = ({ visible, onClose }) => {
+const CustomModal = ({ visible, onClose, onSelectService }) => {
   const [translateY, setTranslateY] = useState(0);
   const [activeTab, setActiveTab] = useState('List');
   const [formVisible, setFormVisible] = useState(false);
@@ -52,6 +52,12 @@ const CustomModal = ({ visible, onClose }) => {
 
   const handleSubmitForm = () => {
     console.log(serviceName);
+  };
+
+  const handleSelectService = (serviceName) => {
+    console.log(serviceName)
+    onSelectService(serviceName); // Call the callback with the selected service
+    onClose(); // Close the modal
   };
 
   const platforms = [
@@ -107,7 +113,7 @@ const CustomModal = ({ visible, onClose }) => {
                 {activeTab === 'List' ? (
                   <ScrollView className="p-3">
                     {platforms.map((platform, index) => (
-                      <CustomCardList key={index} platform={platform.name} image={platform.image} />
+                      <CustomCardList key={index} platform={platform.name} image={platform.image} onPress={() => handleSelectService(platform.name)} /> // Handle selection
                     ))}
                   </ScrollView>
                 ) : (
