@@ -27,9 +27,9 @@ func CreateUser(c *fiber.Ctx) error {
 
 	// Check if the user already exists
 	var existingUser models.User
-	if result := database.DB.Where("mobile_no = ?", user.MobileNo).First(&existingUser); result.Error == nil {
+	if result := database.DB.Where("email = ?", user.Email).First(&existingUser); result.Error == nil {
 		// User already exists
-		log.Printf("User with MobileNo %s already exists\n", user.MobileNo)
+		log.Printf("User with MobileNo %s already exists\n", user.Email)
 		return c.Status(400).JSON("User already exists")
 	}
 

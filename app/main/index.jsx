@@ -48,7 +48,7 @@ const Home = () => {
   const [userName, setuserName] = useState("");
   const router = useRouter();
 
-  const backend_url = "https://subtrack-backend.duckdns.org"
+  const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL
 
   useEffect(() => {
     GoogleSignin.configure();
@@ -63,8 +63,21 @@ const Home = () => {
       const userData = JSON.parse(user); // Parse the stored user data
       // Access the email property from userData (assuming it's stored there)
       const userName = userData.user.givenName;
+      const userId = userData.user.id
+      const userEmail = userData.user.email
       setuserName(userName);
+      console.log(userId);
       console.log(userName);
+
+      try {
+        const response = await axios.post(`${backend_url}/user`, { id: userId, email: userEmail });
+        console.log('User creation response:', response.data);
+        // Handle successful user creation (if needed)
+      }catch(err){
+        if (err.response.data === "User already exists"){
+          console.log(err.response.data);
+        }
+      }
     }
   };
 
