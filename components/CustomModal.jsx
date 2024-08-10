@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Modal, View, Text, Dimensions, ScrollView, TouchableOpacity, Animated, Image } from 'react-native';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 import CustomCardList from './CustomCardList';
+import CustomServiceList from './CustomServiceList';
 import CustomServiceModal from './CustomServiceModal';
 import { images } from '../constants';
 import colors from '../constants/colors';
@@ -18,6 +19,7 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
   const [formVisible, setFormVisible] = useState(false);
   const [serviceName, setServiceName] = useState('');
   const [customPlatforms, setCustomPlatforms] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
   const panRef = useRef(null);
   const underlinePosition = useRef(new Animated.Value(0)).current;
 
@@ -110,6 +112,42 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
     }
   };
   
+  const handleDeleteService = async (serviceToDelete) => {
+    setCustomPlatforms(prev => {
+      const updatedPlatforms = prev.filter(service => service !== serviceToDelete);
+  
+      // Function to update the backend
+      const updateCustomPlatforms = async () => {
+        const user = await AsyncStorage.getItem('user');
+        const userData = JSON.parse(user);
+        const userId = userData.user.id;
+  
+        const post_data = {
+          user_id: userId,
+          custom: { services: updatedPlatforms },
+        };
+  
+        try {
+          const response = await axios.post(`${backend_url}/service`, post_data);
+          console.log('Response from server:', response.data);
+        } catch (error) {
+          console.error('Failed to update custom platforms:', error);
+        }
+      };
+  
+      updateCustomPlatforms(); // Update the backend
+  
+      setRefreshKey(prev => prev + 1); // Trigger a re-render
+      return updatedPlatforms; // Return the updated platforms to update the state
+    });
+  };
+
+  // Log the updated customPlatforms using useEffect
+useEffect(() => {
+  console.log('Updated customPlatforms:', customPlatforms);
+}, [customPlatforms]);
+  
+
   const handleSelectService = (serviceName) => {
     console.log(serviceName)
     onSelectService(serviceName); // Call the callback with the selected service
@@ -173,14 +211,21 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
                     ))}
                   </ScrollView>
                 ) : (
-                  <ScrollView className="p-3">
+                  <ScrollView className="p-3" key={refreshKey}>
                     <View className="flex-1 items-center justify-start">
                       <TouchableOpacity onPress={handleOpenForm} className="bg-secondary p-3 rounded-full w-[90vw] mt-10 border-2 border-gray">
                         <Text className="text-primary text-center text-lg">Add Custom Service</Text>
                       </TouchableOpacity>
                     </View>
+                    <Text className="text-[#fff] p-2 text-center text-lg">Swipe left to delete</Text>
                     {customPlatforms.map((service, index) => (
-                      <CustomCardList key={index} platform={service} image={images.google} onPress={() => handleSelectService(service)} />
+                      <CustomServiceList
+                      key={index}
+                      platform={service}
+                      image={images.default_icon}
+                      onPress={() => handleSelectService(service)}
+                      onDelete={() => handleDeleteService(service)}
+                    />
                     ))}
                   </ScrollView>
                 )}
