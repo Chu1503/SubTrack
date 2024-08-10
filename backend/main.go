@@ -27,6 +27,7 @@ func main() {
 	app.Post("/sub", routes.CreateSub)
 	app.Get("/subs/:user_id", routes.GetSubs)
 	app.Post("/subDetails", routes.GetSubDetails)
+	app.Patch("/editSubDetails", routes.EditSubDetails)
 
 	// Service routes
 	app.Post("/service", routes.CreateService)
