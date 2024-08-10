@@ -12,29 +12,30 @@ import (
 func main() {
 	app := fiber.New()
 
+	// Connect to the database
 	database.ConnectToDB()
 
+	// Basic route for testing server status
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World! 👋")
 	})
 
-	//Create user
+	// User routes
 	app.Post("/user", routes.CreateUser)
 
-	//Create sub
+	// Subscription routes
 	app.Post("/sub", routes.CreateSub)
+	app.Get("/subs/:user_id", routes.GetSubs)
+	app.Post("/subDetails", routes.GetSubDetails)
 
-	//Get all subs of a user
-	app.Get("/sub/:user_id", routes.GetSubs)
-
-	//Push custom services array of a user
+	// Service routes
 	app.Post("/service", routes.CreateService)
-
-	//Get all services of a user
 	app.Get("/service/:user_id", routes.GetServices)
 
 	// Start the Fiber app
 	port := 8080
 	fmt.Printf("Server is running on http://localhost:%d\n", port)
-	log.Fatal(app.Listen(fmt.Sprintf(":%d", port)))
+	if err := app.Listen(fmt.Sprintf(":%d", port)); err != nil {
+		log.Fatalf("Error starting server: %v\n", err)
+	}
 }
