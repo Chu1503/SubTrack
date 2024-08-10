@@ -56,6 +56,8 @@ const Home = () => {
   const [userName, setuserName] = useState("");
   const router = useRouter();
 
+  const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL
+
   useEffect(() => {
     GoogleSignin.configure();
   }, []);
@@ -69,20 +71,35 @@ const Home = () => {
       const userData = JSON.parse(user); // Parse the stored user data
       // Access the email property from userData (assuming it's stored there)
       const userName = userData.user.givenName;
+      const userId = userData.user.id
+      const userEmail = userData.user.email
       setuserName(userName);
+      console.log(userId);
       console.log(userName);
+
+      try {
+        const response = await axios.post(`${backend_url}/user`, { id: userId, email: userEmail });
+        console.log('User creation response:', response.data);
+        // Handle successful user creation (if needed)
+      }catch(err){
+        if (err.response.data === "User already exists"){
+          console.log(err.response.data + " in the DB");
+        }
+      }
     }
   };
 
   const fetchSubscriptions = async () => {
+    const user = await AsyncStorage.getItem('user');
+    const userData = JSON.parse(user);
+    const userId = userData.user.id
+
     try {
-      const response = await axios.get(
-        "http://68.233.114.188:5000/sub/991830116710023169"
-      );
+      const response = await axios.get(`${backend_url}/sub/${userId}`);
       setSubscriptions(response.data);
       setMonthlyPrice(calculateMonthlyPrice(response.data));
     } catch (error) {
-      console.error("Error fetching subscriptions:", error);
+      console.error("Error fetching subscriptions:", error.response.data);
     }
   };
 
@@ -157,7 +174,7 @@ const Home = () => {
             <CustomCard
               key={subscription.ID}
               platform={subscription.name}
-              date={new Date(subscription.start_date).toLocaleDateString()}
+              date={new Date(subscription.start_date).toLocaleDateString('en-GB')}
               price={`₹${subscription.price}`}
               onPress={() => router.push("/main/view")}
             />

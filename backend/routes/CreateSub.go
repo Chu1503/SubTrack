@@ -26,7 +26,7 @@ func CreateSub(c *fiber.Ctx) error {
 
 	// Check if the user with specified UserID exists
 	var user models.User
-	if result := database.DB.First(&user, sub.UserID); result.Error != nil {
+	if result := database.DB.Where("id = ?", sub.UserID).First(&user); result.Error != nil {
 		// User does not exist, return an error
 		log.Printf("User with ID %v does not exist\n", sub.UserID)
 		return c.Status(400).SendString("User does not exist")

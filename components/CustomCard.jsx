@@ -2,14 +2,27 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { images } from "../constants";
 
-const CustomCard = ({ platform, date, price, onPress }) => {
+const CustomCard = ({ platform, date, price }) => {
+  // Helper function to determine image source based on platform
+  const getImageSource = (platform) => {
+    const resultString = platform.replace(/\s+/g, '').toLowerCase();
+    switch (resultString.toLowerCase()) {
+      case 'primevideo':
+        return images.primevideo;
+      case 'netflix':
+        return images.netflix;
+      case 'disney+':
+        return images.disneyplus;
+      // Add more cases as needed
+      default:
+        return images.default_icon; // Fallback image
+    }
+  };
+
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      className="min-h-[60px] bg-black-100 rounded-3xl shadow-md p-4 mt-3 border-2 border-gray"
-    >
+    <TouchableOpacity className="min-h-[60px] bg-black-100 rounded-3xl shadow-md p-4 mt-3 border-2 border-gray">
       <View className="flex-row items-center">
-        <Image source={images.primevideo} className="w-[50px] h-[50px] mr-4" />
+        <Image source={getImageSource(platform)} className="w-[50px] h-[50px] mr-4" />
         
         <View className="flex-1">
           <View className="flex-row justify-between items-center">
