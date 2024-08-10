@@ -141,13 +141,7 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
       return updatedPlatforms; // Return the updated platforms to update the state
     });
   };
-
-  // Log the updated customPlatforms using useEffect
-useEffect(() => {
-  console.log('Updated customPlatforms:', customPlatforms);
-}, [customPlatforms]);
   
-
   const handleSelectService = (serviceName) => {
     console.log(serviceName)
     onSelectService(serviceName); // Call the callback with the selected service
