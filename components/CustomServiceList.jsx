@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, Animated, TouchableOpacity } from 'react-native';
+import { View, Text, Image, Animated, TouchableOpacity, Alert } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
@@ -23,14 +23,39 @@ const CustomServiceList = ({ platform, image, onPress, onDelete }) => {
       const shouldDelete = swipeDistance < -SWIPE_THRESHOLD;
       
       if (shouldDelete) {
-        // Fully swipe out of view
-        Animated.timing(translateX, {
-          toValue: -1000, // Slide out of view
-          duration: 300,
-          useNativeDriver: true,
-        }).start(() => {
-          if (onDelete) onDelete(); // Trigger the delete callback after animation
-        });
+        // Show confirmation alert
+        Alert.alert(
+          'Delete Service',
+          'Are you sure you want to delete this service?',
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+              onPress: () => {
+                // Reset to original position
+                Animated.timing(translateX, {
+                  toValue: 0,
+                  duration: 300,
+                  useNativeDriver: true,
+                }).start();
+              },
+            },
+            {
+              text: 'Delete',
+              onPress: () => {
+                // Fully swipe out of view
+                Animated.timing(translateX, {
+                  toValue: -1000, // Slide out of view
+                  duration: 300,
+                  useNativeDriver: true,
+                }).start(() => {
+                  if (onDelete) onDelete(); // Trigger the delete callback after animation
+                });
+              },
+            },
+          ],
+          { cancelable: true }
+        );
       } else {
         // Return to original position
         Animated.timing(translateX, {
@@ -66,10 +91,10 @@ const CustomServiceList = ({ platform, image, onPress, onDelete }) => {
             </View>
           </View>
         </TouchableOpacity>
-        <Animated.View className="bg-[#FF0000] shadow-md p-4 pl-1 mt-2 w-full border-2 border-gray">
-        <View className="flex items-start justify-center mt-2">
-          <AntDesign name="delete" size={30} color="white" />
-        </View>
+        <Animated.View className="bg-[#FF0000] rounded-3xl shadow-md p-4 pl-1 mt-2 w-full border-2 border-gray">
+          <View className="flex items-start justify-center mt-2 ml-5">
+            <AntDesign name="delete" size={30} color="white" />
+          </View>
         </Animated.View>
       </Animated.View>
     </PanGestureHandler>
