@@ -33,10 +33,15 @@ export default function Welcome() {
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="flex-1 justify-end items-center px-4">
+        <View className="flex-1 justify-start items-center px-4 mt-10">
           <Image
-            source={images.logo}
-            className="w-[130px] h-[84px]"
+            source={images.logoIcon}
+            className="w-[130px] h-[130px] mb-3"
+            resizeMode="contain"
+          />
+          <Image
+            source={images.logoText}
+            className="w-3/4 h-[84px]"
             resizeMode="contain"
           />
         </View>

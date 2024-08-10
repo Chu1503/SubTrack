@@ -34,7 +34,7 @@ const RootLayout = () => {
   // Show loading overlay if authentication state is not determined yet
   if (isSignedIn === null) {
     return (
-      <View style={styles.loadingContainer}>
+      <View>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
