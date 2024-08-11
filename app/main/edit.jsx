@@ -6,6 +6,7 @@ import {
   Text,
   Pressable,
   Modal,
+  TouchableOpacity
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
@@ -31,6 +32,7 @@ const Edit = () => {
   const [customPeriodUnit, setCustomPeriodUnit] = useState("Day(s)");
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [subscriptionDetails, setSubscriptionDetails] = useState({});
+
   const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL;
   const router = useRouter();
   const params = useLocalSearchParams();
@@ -78,9 +80,6 @@ const Edit = () => {
       if (frequency.startsWith('custom:')) {
         setSelectedPeriod('Custom');
         const [value, unit] = frequency.split(':')[1].match(/(\d+)([dmy])/).slice(1);
-        console.log("Custom Period Value:", value);
-        console.log("Custom Period Unit:", unit);
-        
         setCustomPeriodValue(value);
         if (unit === "d") {
           setCustomPeriodUnit("Day(s)");
@@ -90,10 +89,10 @@ const Edit = () => {
           setCustomPeriodUnit("Year(s)");
         }
         setCustomPeriodVisible(true);
-      } else if(frequency.startsWith('semi')){
+      } else if (frequency.startsWith('semi')) {
         setSelectedPeriod(frequency.charAt(0).toUpperCase() + frequency.slice(1, 5) + frequency.charAt(5).toUpperCase() + frequency.slice(6));
         setCustomPeriodVisible(false);
-      }else {
+      } else {
         setSelectedPeriod(frequency.charAt(0).toUpperCase() + frequency.slice(1));
         setCustomPeriodVisible(false);
       }
@@ -105,6 +104,10 @@ const Edit = () => {
 
   const handleCloseModal = () => {
     setModalVisible(false);
+  };
+
+  const handleSelectService = (selectedService) => {
+    setSelectedService(selectedService); // Update the service name
   };
 
   const handleOpenDatePicker = () => {
@@ -146,6 +149,58 @@ const Edit = () => {
     setCustomPeriodUnit(unit);
     setDropdownVisible(false);
   };
+  const validateFields = () => {
+    if (!selectedService.trim()) {
+      Alert.alert("Error Adding Subsciption", "Choose a service");
+      return false;
+    }
+    if (!price.trim() || isNaN(parseFloat(price)) || parseFloat(price) <= 0) {
+      Alert.alert("Error Adding Subsciption", "Enter an amount");
+      return false;
+    }
+    if (!selectedDate) {
+      Alert.alert("Error Adding Subsciption", "Select a valid date");
+      return false;
+    }
+    if (!selectedPeriod) {
+      Alert.alert("Error Adding Subsciption", "Select a period");
+      return false;
+    }
+    if (selectedPeriod === 'Custom' && (isNaN(parseInt(customPeriodValue)) || parseInt(customPeriodValue) <= 0)) {
+      Alert.alert("Error Adding Subsciption", "Custom period value must be a positive number.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async () => {
+    const user = await AsyncStorage.getItem('user');
+    const userData = JSON.parse(user);
+    const userId = userData.user.id
+    if (validateFields()) {
+      const data = {
+        ID: subID,
+        user_id: userId, // Ensure this is set appropriately
+        name: selectedService,
+        price: parseFloat(price),
+        start_date: selectedDate.toISOString(), // Convert date to ISO 8601 format
+        status: 'active', // Initial status
+        frequency: selectedPeriod === 'Custom'
+          ? `custom:${customPeriodValue}${customPeriodUnit.charAt(0).toLowerCase()}`
+          : selectedPeriod.toLowerCase(), // Format frequency as needed
+      };
+
+      // Perform the API request or other actions
+      console.log("Subscription data:", data);
+      try{
+        const response = await axios.patch(`${backend_url}/editSubDetails`, data);
+        console.log('Sub creation response:', response.data);
+      }catch(err){
+        console.error(err.message);
+      }
+      router.replace("/main")
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -154,7 +209,7 @@ const Edit = () => {
           <View className="flex-row items-center mt-7">
             <Pressable
               className="w-10 h-10 rounded-full justify-center items-center mr-2"
-              onPress={() => router.push("/main/view")}
+              onPress={() => router.push({ pathname: `/main/view?subId=${subID}`, params: subID })}
             >
               <Ionicons name="chevron-back-sharp" size={30} color="white" />
             </Pressable>
@@ -211,16 +266,16 @@ const Edit = () => {
                   <Pressable
                     key={period}
                     className={`flex-1 p-3 rounded-lg mx-1 mb-2 border-2 border-gray ${selectedPeriod === period
-                        ? "bg-secondary"
-                        : "bg-black-100"
+                      ? "bg-secondary"
+                      : "bg-black-100"
                       }`}
                     style={{ minWidth: 120 }}
                     onPress={() => handlePeriodSelect(period)}
                   >
                     <Text
                       className={`text-center font-semibold ${selectedPeriod === period
-                          ? "text-primary"
-                          : "text-white"
+                        ? "text-primary"
+                        : "text-white"
                         }`}
                     >
                       {period}
@@ -243,7 +298,7 @@ const Edit = () => {
           </View>
 
           {modalVisible && (
-            <CustomModal visible={modalVisible} onClose={handleCloseModal} />
+            <CustomModal visible={modalVisible} onClose={handleCloseModal} onSelectService={handleSelectService} /> // Pass the callback
           )}
 
           {datePickerVisible && (
@@ -289,6 +344,11 @@ const Edit = () => {
               </View>
             </Modal>
           )}
+          <View className="flex-row justify-between">
+            <TouchableOpacity onPress={handleSubmit} className="bg-secondary p-2 rounded-full w-[90vw] mt-5">
+              <Text className="text-primary text-center text-base">Update Subscription</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
