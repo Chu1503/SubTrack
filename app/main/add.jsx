@@ -142,8 +142,10 @@ const Add = () => {
 
   return (
     <SafeAreaView className="bg-primary h-full">
-      <ScrollView>
-        <View className="w-full justify-center h-full px-4 my-6">
+      {/* <ScrollView>
+        <View className="justify-start h-[100vh] px-4 my-6 bg-white"> */}
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <View className="flex-1 px-4 my-12">
           <View className="flex-row items-center mt-7">
             <Pressable
               className="w-10 h-10 rounded-full justify-center items-center mr-2"
@@ -286,8 +288,8 @@ const Add = () => {
               </View>
             </Modal>
           )}
-          <View className="justify-end">
-            <TouchableOpacity onPress={handleSubmit} className="bg-secondary p-2 rounded-full w-[90vw] mt-5 flex-end">
+          <View className="justify-end flex-1">
+            <TouchableOpacity onPress={handleSubmit} className="bg-secondary p-2 rounded-full w-[90vw]">
               <Text className="text-primary text-center text-base">Add Subscription</Text>
             </TouchableOpacity>
           </View>
