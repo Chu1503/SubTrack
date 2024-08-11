@@ -6,6 +6,7 @@ import (
 	"subscription-manager-backend/models"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 func EditSubDetails(c *fiber.Ctx) error {
@@ -18,7 +19,7 @@ func EditSubDetails(c *fiber.Ctx) error {
 	}
 
 	// Validate the subscription ID
-	if sub.ID == 0 {
+	if sub.ID == uuid.Nil {
 		return c.Status(400).JSON("Subscription ID is required")
 	}
 

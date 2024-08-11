@@ -3,10 +3,12 @@ package models
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Sub struct {
+	ID uuid.UUID `gorm:"primaryKey;type:uuid;not null"`
 	gorm.Model
 	UserID    string    `gorm:"foreignKey:UserID;references:ID" json:"user_id"`
 	Name      string    `json:"name"`

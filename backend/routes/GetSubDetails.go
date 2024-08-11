@@ -2,7 +2,6 @@ package routes
 
 import (
 	"log"
-	"strconv"
 	"subscription-manager-backend/database"
 	"subscription-manager-backend/helpers"
 	"subscription-manager-backend/models"
@@ -41,15 +40,9 @@ func GetSubDetails(c *fiber.Ctx) error {
 
 	// Convert SubID to integer
 	var sub models.Sub
-	sub_id, err := strconv.Atoi(req.SubID)
-	if err != nil {
-		log.Printf("Error converting SubID to integer: %v\n", err)
-		return c.Status(400).JSON("Error validating request data")
-	}
-
 	// Check if the sub exists for the user
-	if result := database.DB.Where("id = ? AND user_id = ?", sub_id, req.UserID).First(&sub); result.Error != nil {
-		log.Printf("Sub with ID %v not found: %v\n", sub_id, result.Error)
+	if result := database.DB.Where("id = ? AND user_id = ?", req.SubID, req.UserID).First(&sub); result.Error != nil {
+		log.Printf("Sub with ID %v not found: %v\n", req.SubID, result.Error)
 		return c.Status(404).JSON("Sub not found")
 	}
 
