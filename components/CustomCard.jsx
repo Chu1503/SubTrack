@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { images } from "../constants";
+import { useRouter } from "expo-router";
 
-const CustomCard = ({ platform, date, price }) => {
+const CustomCard = ({ platform, date, price, subscriptionID, onPress }) => {
+  const router = useRouter();
+
   // Helper function to determine image source based on platform
   const getImageSource = (platform) => {
     const resultString = platform.replace(/\s+/g, '').toLowerCase();
@@ -19,8 +22,13 @@ const CustomCard = ({ platform, date, price }) => {
     }
   };
 
+  const handlePress = () => {
+    console.log(subscriptionID);
+    router.push({ pathname: `/main/view?subId=${subscriptionID}`, params: subscriptionID }); // Remove the braces in params
+  };
+
   return (
-    <TouchableOpacity className="min-h-[60px] bg-black-100 rounded-3xl shadow-md p-4 mt-3 border-2 border-gray">
+    <TouchableOpacity onPress={handlePress} className="min-h-[60px] bg-black-100 rounded-3xl shadow-md p-4 mt-3 border-2 border-gray">
       <View className="flex-row items-center">
         <Image source={getImageSource(platform)} className="w-[50px] h-[50px] mr-4" />
         

@@ -78,7 +78,7 @@ const Home = () => {
       console.log(userName);
 
       try {
-        const response = await axios.post(`${backend_url}/user`, { id: userId, email: userEmail });
+        const response = await axios.post(`${backend_url}/user`, { id: userId, email: userEmail, body: { services: [] } });
         console.log('User creation response:', response.data);
         // Handle successful user creation (if needed)
       }catch(err){
@@ -95,7 +95,7 @@ const Home = () => {
     const userId = userData.user.id
 
     try {
-      const response = await axios.get(`${backend_url}/sub/${userId}`);
+      const response = await axios.get(`${backend_url}/subs/${userId}`);
       setSubscriptions(response.data);
       setMonthlyPrice(calculateMonthlyPrice(response.data));
     } catch (error) {
@@ -173,10 +173,10 @@ const Home = () => {
           {subscriptions.map((subscription) => (
             <CustomCard
               key={subscription.ID}
+              subscriptionID={subscription.ID}
               platform={subscription.name}
               date={new Date(subscription.start_date).toLocaleDateString('en-GB')}
               price={`₹${subscription.price}`}
-              onPress={() => router.push("/main/view")}
             />
           ))}
           <View className="mb-10"></View>
