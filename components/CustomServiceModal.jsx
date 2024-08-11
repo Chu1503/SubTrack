@@ -58,7 +58,7 @@ const CustomServiceModal = ({ visible, onClose, onSubmit, serviceName, setServic
                 handleChangeText={setServiceName}
                 otherStyles="mb-5"
               />
-              <View className="flex-row justify-between">
+              <View className="flex-row justify-between flex-end">
                 <TouchableOpacity onPress={() => { onSubmit(); onClose(); }} className="bg-secondary p-2 rounded-full w-[90vw] mb-7">
                   <Text className="text-primary text-center text-base">Create Service</Text>
                 </TouchableOpacity>
