@@ -169,114 +169,128 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
   };
 
   const platforms = [
-    { name: "Prime Video", image: images.primevideo },
+    { name: "Apple Music", image: images.applemusic },
+    { name: "Apple TV+", image: images.appletvplus },
+    { name: "Amazon Music", image: images.amazonmusic },
+    { name: "Amazon Prime Video", image: images.primevideo },
+    { name: "Dropbox", image: images.dropbox },
+    { name: "Disney+ Hotstar", image: images.hotstar },
+    { name: "Gaana", image: images.gaana },
+    { name: "Google One", image: images.googleone },
+    { name: "JioCinema", image: images.jiocinema },
+    { name: "JioSaavn", image: images.jiosaavn },
+    { name: "Microsoft 365", image: images.microsoft365 },
+    { name: "MX Player", image: images.mxplayer },
     { name: "Netflix", image: images.netflix },
-    { name: "Hotstar", image: images.primevideo },
-    { name: "Sony LIV", image: images.primevideo },
-    { name: "Sony LIV", image: images.primevideo },
-    { name: "Sony LIV", image: images.primevideo },
-    { name: "Sony LIV", image: images.primevideo },
-    { name: "Sony LIV", image: images.primevideo },
-    { name: "Sony LIV", image: images.primevideo },
+    { name: "OneDrive", image: images.onedrive },
+    { name: "Proton", image: images.proton },
+    { name: "Sony LIV", image: images.sonyliv },
+    { name: "Spotify", image: images.spotify },
+    { name: "Surfshark", image: images.surfshark },
+    { name: "YouTube Music", image: images.youtubemusic },
+    { name: "ZEE5", image: images.zee5 },
   ];
 
   return (
     <>
       <Modal transparent visible={visible} animationType="slide">
         <GestureHandlerRootView className="flex-1">
-          <PanGestureHandler
-            ref={panRef}
-            onGestureEvent={handleGesture}
-            onEnded={handleGestureEnd}
+          <View
+            className="flex-1 justify-end"
+            style={{ transform: [{ translateY }] }}
           >
-            <View
-              className="flex-1 justify-end"
-              style={{ transform: [{ translateY }] }}
-            >
-              <View className="h-full bg-black-100 rounded-t-[30px] w-full">
-                <Image
-                  source={images.dash}
-                  resizeMode="contain"
-                  className="h-[35px] self-center mt-2"
-                />
+            <View className="h-full bg-black-100 rounded-t-[30px] w-full">
+              <PanGestureHandler
+                ref={panRef}
+                onGestureEvent={handleGesture}
+                onEnded={handleGestureEnd}
+              >
                 <View className="relative p-1">
-                  <View className="flex-row justify-between mb-2">
-                    <TouchableOpacity
-                      className="flex-1 p-2"
-                      onPress={() => setActiveTab("List")}
-                    >
-                      <Text
-                        className={`text-center text-white text-xl font-psemibold`}
-                      >
-                        List
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      className="flex-1 p-2"
-                      onPress={() => setActiveTab("Custom")}
-                    >
-                      <Text className="text-center text-white text-xl font-psemibold">
-                        Custom
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <Animated.View
-                    style={{
-                      position: "absolute",
-                      bottom: 0,
-                      left: 0,
-                      height: 2,
-                      width: width / 2,
-                      backgroundColor: colors.secondary.DEFAULT,
-                      transform: [{ translateX: underlinePosition }],
-                    }}
+                  <Image
+                    source={images.dash}
+                    resizeMode="contain"
+                    className="h-[35px] self-center mt-2"
                   />
-                </View>
-                {activeTab === "List" ? (
-                  <View className="flex-1">
-                    <ScrollView className="p-3">
-                      {platforms.map((platform, index) => (
-                        <CustomCardList
-                          key={index}
-                          platform={platform.name}
-                          image={platform.image}
-                          onPress={() => handleSelectService(platform.name)}
-                        /> // Handle selection
-                      ))}
-                    </ScrollView>
-                  </View>
-                ) : (
-                  <ScrollView className="p-3" key={refreshKey}>
-                    <View className="flex-1 items-center justify-start">
+                  <View className="relative p-1">
+                    <View className="flex-row justify-between mb-2">
                       <TouchableOpacity
-                        onPress={handleOpenForm}
-                        className="bg-secondary p-3 rounded-full w-[90vw] mt-7 mb-1 border-2 border-gray"
+                        className="flex-1 p-2"
+                        onPress={() => setActiveTab("List")}
                       >
-                        <Text className="text-primary text-center text-lg">
-                          Add Custom Service
+                        <Text
+                          className={`text-center text-white text-xl font-psemibold`}
+                        >
+                          List
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        className="flex-1 p-2"
+                        onPress={() => setActiveTab("Custom")}
+                      >
+                        <Text className="text-center text-white text-xl font-psemibold">
+                          Custom
                         </Text>
                       </TouchableOpacity>
                     </View>
+                    <Animated.View
+                      style={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        height: 2,
+                        width: width / 2,
+                        backgroundColor: colors.secondary.DEFAULT,
+                        transform: [{ translateX: underlinePosition }],
+                      }}
+                    />
+                  </View>
+                </View>
+              </PanGestureHandler>
 
-                    {customPlatforms.map((service, index) => (
-                      <CustomServiceList
+              {activeTab === "List" ? (
+                <View className="flex-1">
+                  <ScrollView className="p-3">
+                    {platforms.map((platform, index) => (
+                      <CustomCardList
                         key={index}
-                        platform={service}
-                        image={images.default_icon}
-                        onPress={() => handleSelectService(service)}
-                        onDelete={() => handleDeleteService(service)}
-                      />
+                        platform={platform.name}
+                        image={platform.image}
+                        onPress={() => handleSelectService(platform.name)}
+                      /> // Handle selection
                     ))}
-                    {customPlatforms.length > 0 && (
-                      <Text className="text-[#fff] p-2 mt-3 text-center text-md">
-                        swipe left to delete
-                      </Text>
-                    )}
                   </ScrollView>
-                )}
-              </View>
+                </View>
+              ) : (
+                <ScrollView className="p-3" key={refreshKey}>
+                  <View className="flex-1 items-center justify-start">
+                    <TouchableOpacity
+                      onPress={handleOpenForm}
+                      className="bg-secondary p-3 rounded-full w-[90vw] mt-4 mb-2 border-2 border-gray"
+                    >
+                      <Text className="text-primary text-center text-lg">
+                        Add Custom Service
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  {customPlatforms.map((service, index, platform) => (
+                    <CustomServiceList
+                      key={index}
+                      platform={service}
+                      image={platform.image}
+                      onPress={() => handleSelectService(service)}
+                      onDelete={() => handleDeleteService(service)}
+                    />
+                  ))}
+                  {customPlatforms.length > 0 && (
+                    <Text className="text-[#fff] p-2 mt-3 text-center text-md">
+                      swipe left to delete
+                    </Text>
+                  )}
+                </ScrollView>
+              )}
             </View>
-          </PanGestureHandler>
+          </View>
         </GestureHandlerRootView>
       </Modal>
 
