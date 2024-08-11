@@ -43,9 +43,9 @@ const ViewCard = () => {
 
   const calculateNextPaymentDate = (startDate, frequency) => {
     const date = new Date(startDate);
-    
+
     const freq = String(frequency);
-  
+
     // Process the frequency string
     if (freq === "monthly") {
       date.setMonth(date.getMonth() + 1);
@@ -57,7 +57,7 @@ const ViewCard = () => {
       const customFreq = freq.split(":")[1];
       const value = parseInt(customFreq, 10);
       const unit = customFreq.replace(value, "");
-  
+
       if (unit === "d") {
         date.setDate(date.getDate() + value);
       } else if (unit === "m") {
@@ -67,10 +67,10 @@ const ViewCard = () => {
       } else {
         console.warn('Unknown custom frequency unit:', unit); // Debugging line
       }
-    } 
+    }
     return date.toLocaleDateString('en-GB');
   };
-  
+
 
 
   useEffect(() => {
@@ -98,6 +98,25 @@ const ViewCard = () => {
     fetchData();
   }, [router.query]);
 
+  const handleDelete = async () => {
+    const user = await AsyncStorage.getItem('user');
+    const userData = JSON.parse(user);
+    const userId = userData.user.id
+    if (subID) {
+      try {
+        const postData = {
+          "user_id": userId,
+          "sub_id": subID
+        }
+        // console.log(postData);
+        const response = await axios.post(`${backend_url}/deleteSub`, postData);
+        router.replace("/main")
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  };
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
@@ -123,12 +142,12 @@ const ViewCard = () => {
             </Text>
             <View className="w-full h-[2px] bg-white/50 mb-4" />
             <View className="w-full pl-2 pr-2">
-            <View className="flex-row justify-between mb-2">
+              <View className="flex-row justify-between mb-2">
                 <Text className="text-white text-base font-pextrabold">
                   Started on:
                 </Text>
                 <Text className="text-white text-base font-pmedium">
-                {new Date(subscriptionDetails.start_date).toLocaleDateString('en-GB')}
+                  {new Date(subscriptionDetails.start_date).toLocaleDateString('en-GB')}
                 </Text>
               </View>
               <View className="flex-row justify-between mb-2">
@@ -136,7 +155,7 @@ const ViewCard = () => {
                   Status:
                 </Text>
                 <Text className="text-white text-base font-pmedium">
-                {subscriptionDetails.status}
+                  {subscriptionDetails.status}
                 </Text>
               </View>
               <View className="flex-row justify-between mb-2">
@@ -150,7 +169,7 @@ const ViewCard = () => {
                   Renewal Period:
                 </Text>
                 <Text className="text-white text-base font-pmedium">
-                {subscriptionDetails.frequency}
+                  {subscriptionDetails.frequency}
                 </Text>
               </View>
               <View className="flex-row justify-between">
@@ -169,7 +188,8 @@ const ViewCard = () => {
           >
             <MaterialIcons name="edit" size={24} color="#F4CE14" />
           </TouchableOpacity>
-          <TouchableOpacity className="flex-row items-center bg-[#D11A2A] p-2 rounded-full mb-7 w-[40vw] self-center justify-center">
+          <TouchableOpacity className="flex-row items-center bg-[#D11A2A] p-2 rounded-full mb-7 w-[40vw] self-center justify-center"
+            onPress={handleDelete}>
             <MaterialCommunityIcons name="delete-forever" size={30} color="white" />
             <Text className="text-white text-base font-pextrabold text-center">Delete</Text>
           </TouchableOpacity>
