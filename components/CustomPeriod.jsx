@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Modal, FlatList, TouchableWithoutFeedback } from 'react-native';
 
 const CustomPeriod = ({ value, onValueChange, unit, onUnitChange }) => {
@@ -10,6 +10,10 @@ const CustomPeriod = ({ value, onValueChange, unit, onUnitChange }) => {
     { label: 'Month(s)', value: 'Month(s)' },
     { label: 'Year(s)', value: 'Year(s)' },
   ];
+
+  useEffect(() => {
+    setSelectedUnit(unit);
+  }, [unit]);
 
   const handleSelectUnit = (unit) => {
     setSelectedUnit(unit);

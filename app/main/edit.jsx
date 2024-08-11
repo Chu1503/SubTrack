@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -9,25 +9,96 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
-import { router } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import CustomField from "../../components/CustomField";
 import CustomModal from "../../components/CustomModal";
 import CustomPeriod from "../../components/CustomPeriod";
 import colors from "../../constants/colors";
 import DatePicker from 'react-native-modern-datepicker';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 const Edit = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const [selectedService, setSelectedService] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [tempDate, setTempDate] = useState(new Date()); // Track temporary date
   const [price, setPrice] = useState("");
   const [selectedPeriod, setSelectedPeriod] = useState("");
   const [customPeriodVisible, setCustomPeriodVisible] = useState(false);
   const [customPeriodValue, setCustomPeriodValue] = useState("1");
-  const [customPeriodUnit, setCustomPeriodUnit] = useState("Day");
+  const [customPeriodUnit, setCustomPeriodUnit] = useState("Day(s)");
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [subscriptionDetails, setSubscriptionDetails] = useState({});
+  const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL;
+  const router = useRouter();
+  const params = useLocalSearchParams();
+  const subID = params.subId;
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const user = await AsyncStorage.getItem('user');
+      const userData = JSON.parse(user);
+      const userId = userData.user.id
+      if (subID) {
+        try {
+          const postData = {
+            "user_id": userId,
+            "sub_id": subID
+          }
+          console.log(subID);
+          // Replace with your actual data fetching logic
+          const response = await axios.post(`${backend_url}/subDetails`, postData);
+          // console.log(response.data);
+          setSubscriptionDetails(response.data);
+        } catch (error) {
+          console.error('Failed to fetch subscription details:', error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [subID]);
+
+  useEffect(() => {
+    if (subscriptionDetails) {
+      const name = subscriptionDetails.name || "";
+      const date = subscriptionDetails.start_date ? new Date(subscriptionDetails.start_date) : new Date();
+      const price = subscriptionDetails.price || "";
+      const frequency = subscriptionDetails.frequency || "";
+      const period = subscriptionDetails.period || ""; // Adjust based on your data
+
+      setSelectedService(name);
+      setSelectedDate(date);
+      setTempDate(date);
+      setPrice(String(price));
+
+      // Handle frequency and period
+      if (frequency.startsWith('custom:')) {
+        setSelectedPeriod('Custom');
+        const [value, unit] = frequency.split(':')[1].match(/(\d+)([dmy])/).slice(1);
+        console.log("Custom Period Value:", value);
+        console.log("Custom Period Unit:", unit);
+        
+        setCustomPeriodValue(value);
+        if (unit === "d") {
+          setCustomPeriodUnit("Day(s)");
+        } else if (unit === "m") {
+          setCustomPeriodUnit("Month(s)");
+        } else {
+          setCustomPeriodUnit("Year(s)");
+        }
+        setCustomPeriodVisible(true);
+      } else if(frequency.startsWith('semi')){
+        setSelectedPeriod(frequency.charAt(0).toUpperCase() + frequency.slice(1, 5) + frequency.charAt(5).toUpperCase() + frequency.slice(6));
+        setCustomPeriodVisible(false);
+      }else {
+        setSelectedPeriod(frequency.charAt(0).toUpperCase() + frequency.slice(1));
+        setCustomPeriodVisible(false);
+      }
+    }
+  }, [subscriptionDetails]);
   const handleOpenModal = () => {
     setModalVisible(true);
   };
@@ -95,7 +166,7 @@ const Edit = () => {
           <View className="mt-1">
             <CustomField
               title="Service"
-              placeholder="Select a service"
+              placeholder={selectedService ? selectedService : "Select a service"}
               onPress={handleOpenModal}
               otherStyles="my-2"
               innerText={
@@ -123,7 +194,7 @@ const Edit = () => {
             />
             <CustomField
               title="Price"
-              placeholder="0.00"
+              placeholder={price ? price : "0.00"}
               value={price}
               onChangeText={setPrice}
               keyboardType="numeric"

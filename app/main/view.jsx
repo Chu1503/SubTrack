@@ -84,10 +84,10 @@ const ViewCard = () => {
             "user_id": userId,
             "sub_id": subID
           }
-          console.log(postData);
+          // console.log(postData);
           // Replace with your actual data fetching logic
           const response = await axios.post(`${backend_url}/subDetails`, postData);
-          console.log(response.data);
+          // console.log(response.data);
           setSubscriptionDetails(response.data);
         } catch (error) {
           console.error('Failed to fetch subscription details:', error);
@@ -165,7 +165,7 @@ const ViewCard = () => {
           </View>
           <TouchableOpacity
             className="w-[60px] h-[40px] border-2 border-secondary rounded-full justify-center items-center self-center"
-            onPress={() => router.push('/main/edit')}
+            onPress={() => router.push({ pathname: `/main/edit?subId=${subscriptionDetails.ID}`, params: subscriptionDetails.ID })} // Remove the braces in params}
           >
             <MaterialIcons name="edit" size={24} color="#F4CE14" />
           </TouchableOpacity>
