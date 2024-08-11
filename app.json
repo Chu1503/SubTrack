@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Subscription_Manager",
-    "slug": "Subscription_Manager",
+    "name": "SubTrack",
+    "slug": "subtrack",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

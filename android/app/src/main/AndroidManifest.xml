@@ -27,6 +27,7 @@
         <data android:scheme="myapp"/>
         <data android:scheme="com.muthannamanav2003.Subscription_Manager"/>
         <data android:scheme="exp+subscriptionmanager"/>
+        <data android:scheme="exp+subtrack"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

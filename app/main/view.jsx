@@ -6,6 +6,7 @@ import {
   Pressable,
   Image,
   TouchableOpacity,
+  Alert
 } from "react-native";
 import React, { Suspense, useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -99,22 +100,38 @@ const ViewCard = () => {
   }, [router.query]);
 
   const handleDelete = async () => {
-    const user = await AsyncStorage.getItem('user');
-    const userData = JSON.parse(user);
-    const userId = userData.user.id
-    if (subID) {
-      try {
-        const postData = {
-          "user_id": userId,
-          "sub_id": subID
+    Alert.alert(
+      "Confirm Deletion",
+      "Are you sure you want to delete this subscription?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "OK",
+          onPress: async () => {
+            const user = await AsyncStorage.getItem('user');
+            const userData = JSON.parse(user);
+            const userId = userData.user.id;
+            
+            if (subID) {
+              try {
+                const postData = {
+                  "user_id": userId,
+                  "sub_id": subID
+                };
+                // console.log(postData);
+                const response = await axios.post(`${backend_url}/deleteSub`, postData);
+                router.replace("/main");
+              } catch (error) {
+                console.error(error);
+              }
+            }
+          }
         }
-        // console.log(postData);
-        const response = await axios.post(`${backend_url}/deleteSub`, postData);
-        router.replace("/main")
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      ]
+    );
   };
 
   return (

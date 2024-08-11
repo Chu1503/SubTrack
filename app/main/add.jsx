@@ -29,7 +29,7 @@ const Add = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("");
   const [customPeriodVisible, setCustomPeriodVisible] = useState(false);
   const [customPeriodValue, setCustomPeriodValue] = useState("1");
-  const [customPeriodUnit, setCustomPeriodUnit] = useState("Day");
+  const [customPeriodUnit, setCustomPeriodUnit] = useState("Day(s)");
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [serviceName, setServiceName] = useState('');
 

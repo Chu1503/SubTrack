@@ -1,4 +1,4 @@
-rootProject.name = 'Subscription_Manager'
+rootProject.name = 'SubTrack'
 
 dependencyResolutionManagement {
   versionCatalogs {
