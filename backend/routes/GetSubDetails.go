@@ -38,9 +38,8 @@ func GetSubDetails(c *fiber.Ctx) error {
 		return c.Status(404).JSON("User not found")
 	}
 
-	// Convert SubID to integer
-	var sub models.Sub
 	// Check if the sub exists for the user
+	var sub models.Sub
 	if result := database.DB.Where("id = ? AND user_id = ?", req.SubID, req.UserID).First(&sub); result.Error != nil {
 		log.Printf("Sub with ID %v not found: %v\n", req.SubID, result.Error)
 		return c.Status(404).JSON("Sub not found")
