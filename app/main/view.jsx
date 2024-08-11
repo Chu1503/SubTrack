@@ -24,6 +24,23 @@ const ViewCard = () => {
   const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL
   const [subscriptionDetails, setSubscriptionDetails] = useState({});
 
+  const getImageSource = (platform) => {
+    const platformName = String(platform);
+    const resultString = platformName.replace(/\s+/g, '').toLowerCase();
+    switch (resultString.toLowerCase()) {
+      case 'primevideo':
+        return images.primevideo;
+      case 'netflix':
+        return images.netflix;
+      case 'disney+':
+        return images.disneyplus;
+      // Add more cases as needed
+      default:
+        return images.default_icon; // Fallback image
+    }
+  };
+
+
   const calculateNextPaymentDate = (startDate, frequency) => {
     const date = new Date(startDate);
     
@@ -98,7 +115,7 @@ const ViewCard = () => {
           </View>
           <View className="bg-black-100 mt-10 rounded-3xl p-5">
             <Image
-              source={images.primevideo}
+              source={getImageSource(subscriptionDetails.name)}
               className="w-24 h-24 mb-2 self-center"
             />
             <Text className="text-white text-2xl font-pextrabold mb-4 text-center">
