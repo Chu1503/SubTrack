@@ -6,12 +6,12 @@ import {
   Pressable,
   Image,
   TouchableOpacity,
-  Alert
+  Alert,
 } from "react-native";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Feather from "@expo/vector-icons/Feather";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { images } from "../../constants";
 import { secondary } from "../../constants/colors";
@@ -22,32 +22,61 @@ const ViewCard = () => {
   const router = useRouter();
   const params = useLocalSearchParams();
   const subID = params.subId;
-  const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL
+  const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL;
   const [subscriptionDetails, setSubscriptionDetails] = useState({});
 
   const getImageSource = (platform) => {
     const platformName = String(platform);
-    const resultString = platformName.replace(/\s+/g, '').toLowerCase();
+    const resultString = platformName.replace(/\s+/g, "").toLowerCase();
     switch (resultString.toLowerCase()) {
-      case 'primevideo':
+      case "primevideo":
         return images.primevideo;
-      case 'netflix':
+      case "netflix":
         return images.netflix;
-      case 'disney+':
+      case "disney+":
         return images.disneyplus;
       // Add more cases as needed
       default:
-        return images.default_icon; // Fallback image
+        return null; // Fallback to null if no image is found
     }
   };
 
+  // Function to render fallback view
+  const renderFallbackView = (platform) => {
+    const platformName = String(platform);
+    return (
+      // <View className="items-center bg-black-100 rounded-3xl p-5 border-2 border-black w-[100px] h-[100px] self-center mb-2">
+        <Text className="text-white text-6xl font-pregular">
+          {platformName.charAt(0)}
+        </Text>
+      // </View>
+    );
+  };
+
+  const formatCustomFrequency = (freq) => {
+    if (typeof freq === "string" && freq.startsWith("custom:")) {
+      const customFreq = freq.split(":")[1];
+      const value = parseInt(customFreq, 10);
+      const unit = customFreq.replace(value, "");
+
+      if (unit === "d") {
+        return `${value} days`;
+      } else if (unit === "m") {
+        return `${value} months`;
+      } else if (unit === "y") {
+        return `${value} years`;
+      } else {
+        console.warn("Unknown custom frequency unit:", unit); // Debugging line
+        return freq;
+      }
+    }
+    return freq;
+  };
 
   const calculateNextPaymentDate = (startDate, frequency) => {
     const date = new Date(startDate);
-
     const freq = String(frequency);
 
-    // Process the frequency string
     if (freq === "monthly") {
       date.setMonth(date.getMonth() + 1);
     } else if (freq === "semi-annually") {
@@ -66,32 +95,33 @@ const ViewCard = () => {
       } else if (unit === "y") {
         date.setFullYear(date.getFullYear() + value);
       } else {
-        console.warn('Unknown custom frequency unit:', unit); // Debugging line
+        console.warn("Unknown custom frequency unit:", unit); // Debugging line
       }
     }
-    return date.toLocaleDateString('en-GB');
+    return {
+      date: date.toLocaleDateString("en-GB"),
+      formattedFrequency: formatCustomFrequency(frequency),
+    };
   };
-
-
 
   useEffect(() => {
     const fetchData = async () => {
-      const user = await AsyncStorage.getItem('user');
+      const user = await AsyncStorage.getItem("user");
       const userData = JSON.parse(user);
-      const userId = userData.user.id
+      const userId = userData.user.id;
       if (subID) {
         try {
           const postData = {
-            "user_id": userId,
-            "sub_id": subID
-          }
-          // console.log(postData);
-          // Replace with your actual data fetching logic
-          const response = await axios.post(`${backend_url}/subDetails`, postData);
-          // console.log(response.data);
+            user_id: userId,
+            sub_id: subID,
+          };
+          const response = await axios.post(
+            `${backend_url}/subDetails`,
+            postData
+          );
           setSubscriptionDetails(response.data);
         } catch (error) {
-          console.error('Failed to fetch subscription details:', error);
+          console.error("Failed to fetch subscription details:", error);
         }
       }
     };
@@ -106,33 +136,41 @@ const ViewCard = () => {
       [
         {
           text: "Cancel",
-          style: "cancel"
+          style: "cancel",
         },
         {
           text: "OK",
           onPress: async () => {
-            const user = await AsyncStorage.getItem('user');
+            const user = await AsyncStorage.getItem("user");
             const userData = JSON.parse(user);
             const userId = userData.user.id;
-            
+
             if (subID) {
               try {
                 const postData = {
-                  "user_id": userId,
-                  "sub_id": subID
+                  user_id: userId,
+                  sub_id: subID,
                 };
-                // console.log(postData);
-                const response = await axios.post(`${backend_url}/deleteSub`, postData);
+                const response = await axios.post(
+                  `${backend_url}/deleteSub`,
+                  postData
+                );
                 router.replace("/main");
               } catch (error) {
                 console.error(error);
               }
             }
-          }
-        }
+          },
+        },
       ]
     );
   };
+
+  const { date: nextPaymentDate, formattedFrequency } =
+    calculateNextPaymentDate(
+      subscriptionDetails.start_date,
+      subscriptionDetails.frequency
+    );
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -150,10 +188,16 @@ const ViewCard = () => {
             </Text>
           </View>
           <View className="bg-black-100 mt-10 rounded-3xl p-5">
-            <Image
-              source={getImageSource(subscriptionDetails.name)}
-              className="w-24 h-24 mb-2 self-center"
-            />
+            {getImageSource(subscriptionDetails.name) ? (
+              <Image
+                source={getImageSource(subscriptionDetails.name)}
+                className="w-24 h-24 mb-2 self-center rounded-3xl"
+              />
+            ) : (
+              <View className="items-center bg-black-100 rounded-3xl p-5 border-2 border-black w-[100px] h-[100px] self-center mb-2">
+              {renderFallbackView(subscriptionDetails.name)}
+              </View>
+            )}
             <Text className="text-white text-2xl font-pextrabold mb-4 text-center">
               {subscriptionDetails.name}
             </Text>
@@ -164,7 +208,9 @@ const ViewCard = () => {
                   Started on:
                 </Text>
                 <Text className="text-white text-base font-pmedium">
-                  {new Date(subscriptionDetails.start_date).toLocaleDateString('en-GB')}
+                  {new Date(subscriptionDetails.start_date).toLocaleDateString(
+                    "en-GB"
+                  )}
                 </Text>
               </View>
               <View className="flex-row justify-between mb-2">
@@ -179,14 +225,16 @@ const ViewCard = () => {
                 <Text className="text-white text-base font-pextrabold">
                   Price:
                 </Text>
-                <Text className="text-white text-base font-pmedium">₹{subscriptionDetails.price}</Text>
+                <Text className="text-white text-base font-pmedium">
+                  ₹{subscriptionDetails.price}
+                </Text>
               </View>
               <View className="flex-row justify-between mb-2">
                 <Text className="text-white text-base font-pextrabold">
                   Renewal Period:
                 </Text>
                 <Text className="text-white text-base font-pmedium">
-                  {subscriptionDetails.frequency}
+                  {formattedFrequency}
                 </Text>
               </View>
               <View className="flex-row justify-between">
@@ -194,22 +242,40 @@ const ViewCard = () => {
                   Next Payment Date:
                 </Text>
                 <Text className="text-white text-base font-pmedium">
-                  {calculateNextPaymentDate(subscriptionDetails.start_date, subscriptionDetails.frequency)}
+                  {nextPaymentDate}
                 </Text>
               </View>
             </View>
           </View>
-          <TouchableOpacity
-            className="w-[60px] h-[40px] border-2 border-secondary rounded-full justify-center items-center self-center"
-            onPress={() => router.push({ pathname: `/main/edit?subId=${subscriptionDetails.ID}`, params: subscriptionDetails.ID })} // Remove the braces in params}
-          >
-            <MaterialIcons name="edit" size={24} color="#F4CE14" />
-          </TouchableOpacity>
-          <TouchableOpacity className="flex-row items-center bg-[#D11A2A] p-2 rounded-full mb-7 w-[40vw] self-center justify-center"
-            onPress={handleDelete}>
-            <MaterialCommunityIcons name="delete-forever" size={30} color="white" />
-            <Text className="text-white text-base font-pextrabold text-center">Delete</Text>
-          </TouchableOpacity>
+          <View className="flex-row justify-between mt-5">
+            <TouchableOpacity
+              className="flex-row items-center bg-[#D11A2A] p-2 rounded-full mb-7 w-[40vw] self-center justify-center"
+              onPress={handleDelete}
+            >
+              <MaterialCommunityIcons
+                name="delete-forever"
+                size={30}
+                color="white"
+              />
+              <Text className="text-white text-base font-pextrabold text-center ml-2">
+                Delete
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="flex-row items-center bg-[#F4CE14] p-2 rounded-full mb-7 w-[40vw] self-center justify-center"
+              onPress={() =>
+                router.push({
+                  pathname: `/main/edit?subId=${subscriptionDetails.ID}`,
+                  params: subscriptionDetails.ID,
+                })
+              }
+            >
+              <Feather name="edit" size={30} color="black" />
+              <Text className="text-black text-base font-pextrabold text-center ml-2">
+                Edit
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
