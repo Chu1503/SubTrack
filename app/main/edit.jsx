@@ -7,6 +7,7 @@ import {
   Pressable,
   Modal,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
@@ -38,6 +39,8 @@ const Edit = () => {
   const params = useLocalSearchParams();
   const subID = params.subId;
 
+  const [loading, setLoading] = useState(true); 
+
   useEffect(() => {
     const fetchData = async () => {
       const user = await AsyncStorage.getItem("user");
@@ -59,6 +62,8 @@ const Edit = () => {
           setSubscriptionDetails(response.data);
         } catch (error) {
           console.error("Failed to fetch subscription details:", error);
+        } finally {
+          setLoading(false);
         }
       }
     };
@@ -251,7 +256,11 @@ const Edit = () => {
               Edit Subscription
             </Text>
           </View>
-
+          {loading ? (
+            <View className="flex-1 justify-center items-center h-full mt-52">
+            <ActivityIndicator size="xl" color="#F4CE14" className="flex-1 justify-center align-middle"/>
+            </View>
+          ) : (
           <View className="mt-1">
             <CustomField
               title="Service"
@@ -337,7 +346,9 @@ const Edit = () => {
                 onDropdownSelect={handleDropdownSelect}
               />
             )}
+            
           </View>
+          )}
 
           {modalVisible && (
             <CustomModal

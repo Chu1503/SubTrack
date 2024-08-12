@@ -7,6 +7,7 @@ import {
   Text,
   RefreshControl,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import axios from "axios";
 import { images } from "../../constants";
@@ -56,7 +57,7 @@ const Home = () => {
   const [userName, setuserName] = useState("");
   const router = useRouter();
 
-  const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL
+  const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL;
 
   useEffect(() => {
     GoogleSignin.configure();
@@ -71,18 +72,22 @@ const Home = () => {
       const userData = JSON.parse(user); // Parse the stored user data
       // Access the email property from userData (assuming it's stored there)
       const userName = userData.user.givenName;
-      const userId = userData.user.id
-      const userEmail = userData.user.email
+      const userId = userData.user.id;
+      const userEmail = userData.user.email;
       setuserName(userName);
       console.log(userId);
       console.log(userName);
 
       try {
-        const response = await axios.post(`${backend_url}/user`, { id: userId, email: userEmail, body: { services: [] } });
-        console.log('User creation response:', response.data);
+        const response = await axios.post(`${backend_url}/user`, {
+          id: userId,
+          email: userEmail,
+          body: { services: [] },
+        });
+        console.log("User creation response:", response.data);
         // Handle successful user creation (if needed)
-      }catch(err){
-        if (err.response.data === "User already exists"){
+      } catch (err) {
+        if (err.response.data === "User already exists") {
           console.log(err.response.data + " in the DB");
         }
       }
@@ -90,9 +95,11 @@ const Home = () => {
   };
 
   const fetchSubscriptions = async () => {
-    const user = await AsyncStorage.getItem('user');
+    setLoading(true); // Start loading before fetching data
+
+    const user = await AsyncStorage.getItem("user");
     const userData = JSON.parse(user);
-    const userId = userData.user.id
+    const userId = userData.user.id;
 
     try {
       const response = await axios.get(`${backend_url}/subs/${userId}`);
@@ -100,6 +107,8 @@ const Home = () => {
       setMonthlyPrice(calculateMonthlyPrice(response.data));
     } catch (error) {
       console.error("Error fetching subscriptions:", error.response.data);
+    } finally {
+      setLoading(false); // Stop loading after the data is fetched or if an error occurs
     }
   };
 
@@ -126,6 +135,8 @@ const Home = () => {
       console.error("Error during logout:", error);
     }
   };
+
+  const [loading, setLoading] = useState(true);
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -170,15 +181,23 @@ const Home = () => {
             ₹{monthlyPrice.toFixed(2)}
           </Text>
           {/* <Text className="text-md text-white text-regular font-pmedium mb-2">Updated on XX/XX/XXXX</Text> */}
-          {subscriptions.map((subscription) => (
-            <CustomCard
-              key={subscription.ID}
-              subscriptionID={subscription.ID}
-              platform={subscription.name}
-              date={new Date(subscription.start_date).toLocaleDateString('en-GB')}
-              price={`₹${subscription.price}`}
-            />
-          ))}
+          {loading ? (
+            <View className="mt-40">
+            <ActivityIndicator size="xl" color="#F4CE14" className="flex-1 justify-center align-middle"/>
+            </View>
+          ) : (
+            subscriptions.map((subscription) => (
+              <CustomCard
+                key={subscription.ID}
+                subscriptionID={subscription.ID}
+                platform={subscription.name}
+                date={new Date(subscription.start_date).toLocaleDateString(
+                  "en-GB"
+                )}
+                price={`₹${subscription.price}`}
+              />
+            ))
+          )}
           <View className="mb-10"></View>
         </View>
       </ScrollView>

@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,6 +25,7 @@ const ViewCard = () => {
   const subID = params.subId;
   const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL;
   const [subscriptionDetails, setSubscriptionDetails] = useState({});
+  const [loading, setLoading] = useState(true); 
 
   const getImageSource = (platform) => {
     const platformName = String(platform);
@@ -122,6 +124,8 @@ const ViewCard = () => {
           setSubscriptionDetails(response.data);
         } catch (error) {
           console.error("Failed to fetch subscription details:", error);
+        } finally {
+          setLoading(false);
         }
       }
     };
@@ -187,7 +191,14 @@ const ViewCard = () => {
               Subscription Details
             </Text>
           </View>
+          
           <View className="bg-black-100 mt-10 rounded-3xl p-5">
+          {loading ? (
+            <View className="flex-1 justify-center items-center h-full">
+            <ActivityIndicator size="xl" color="#F4CE14" className="flex-1 justify-center align-middle"/>
+            </View>
+          ) : (
+            <>
             {getImageSource(subscriptionDetails.name) ? (
               <Image
                 source={getImageSource(subscriptionDetails.name)}
@@ -246,6 +257,8 @@ const ViewCard = () => {
                 </Text>
               </View>
             </View>
+            </>
+            )}
           </View>
           <View className="flex-row justify-between mt-5">
             <TouchableOpacity
