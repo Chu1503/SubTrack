@@ -95,30 +95,65 @@ const Home = () => {
     }
   };
 
+
+  const checkItemExists = async (key) => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      return value !== null ? JSON.parse(value) : false;
+    } catch (error) {
+      console.error('Error accessing item in AsyncStorage:', error);
+      return false;
+    }
+  };
+
+  const setItemToAsyncStorage = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+      console.log('Item successfully set in AsyncStorage');
+    } catch (error) {
+      console.error('Error setting item in AsyncStorage:', error);
+    }
+  };
+
   const fetchSubscriptions = async () => {
     setLoading(true); // Start loading before fetching data
 
-    const user = await AsyncStorage.getItem("user");
-    const userData = JSON.parse(user);
-    const userId = userData.user.id;
-
     try {
+      const user = await AsyncStorage.getItem("user");
+      const userData = JSON.parse(user);
+      const userId = userData.user.id;
+
       const response = await axios.get(`${backend_url}/subs/${userId}`);
+      console.log("Subscriptions response:", response.data);
+      await setItemToAsyncStorage("subDetails", JSON.stringify(response.data));
       setSubscriptions(response.data);
       setMonthlyPrice(calculateMonthlyPrice(response.data));
     } catch (error) {
-      console.error("Error fetching subscriptions:", error.response.data);
+      console.error("Error fetching subscriptions:", error.response?.data || error.message);
     } finally {
       setLoading(false); // Stop loading after the data is fetched or if an error occurs
     }
   };
 
   useEffect(() => {
-    checkAuthStatus().then(() => {
+    const checkAuthAndFetchSubscriptions = async () => {
+      await checkAuthStatus(); // Ensure you handle this properly, depending on how it works in your project
       if (isSignedIn) {
-        fetchSubscriptions();
+        const result = await checkItemExists("subDetails");
+        if (result) {
+          console.log('Item exists in AsyncStorage: ', result);
+          setSubscriptions(result);
+          setMonthlyPrice(calculateMonthlyPrice(result));
+          setLoading(false); // Stop loading after the data is fetched or if an error occurs
+        } else {
+          fetchSubscriptions();
+        }
+
       }
-    });
+      // fetchSubscriptions();
+    };
+
+    checkAuthAndFetchSubscriptions();
   }, [isSignedIn]);
 
   const onRefresh = () => {

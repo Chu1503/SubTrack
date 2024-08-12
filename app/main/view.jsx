@@ -101,6 +101,16 @@ const ViewCard = () => {
     );
   };
 
+  const checkItemExists = async (key) => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      return value !== null ? JSON.parse(value) : false;
+    } catch (error) {
+      console.error('Error accessing item in AsyncStorage:', error);
+      return false;
+    }
+  };
+
   const formatCustomFrequency = (freq) => {
     if (typeof freq === "string" && freq.startsWith("custom:")) {
       const customFreq = freq.split(":")[1];
@@ -152,31 +162,50 @@ const ViewCard = () => {
     };
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const user = await AsyncStorage.getItem("user");
-      const userData = JSON.parse(user);
-      const userId = userData.user.id;
-      if (subID) {
-        try {
-          const postData = {
-            user_id: userId,
-            sub_id: subID,
-          };
-          const response = await axios.post(
-            `${backend_url}/subDetails`,
-            postData
-          );
-          setSubscriptionDetails(response.data);
-        } catch (error) {
-          console.error("Failed to fetch subscription details:", error);
-        } finally {
-          setLoading(false);
-        }
+  const fetchData = async () => {
+    const user = await AsyncStorage.getItem("user");
+    const userData = JSON.parse(user);
+    const userId = userData.user.id;
+    if (subID) {
+      try {
+        const postData = {
+          user_id: userId,
+          sub_id: subID,
+        };
+        const response = await axios.post(
+          `${backend_url}/subDetails`,
+          postData
+        );
+        setSubscriptionDetails(response.data);
+      } catch (error) {
+        console.error("Failed to fetch subscription details:", error);
+      } finally {
+        setLoading(false);
       }
-    };
+    }
+  };
 
-    fetchData();
+  useEffect(() => { 
+    const checkAndFetchSubscription = async () => {   
+      const result = await checkItemExists("subDetails");
+        if (result) {
+          const subscription = result.find(sub => sub.ID === subID);
+          if (subscription) {
+            // Set the subscription details
+            setSubscriptionDetails(subscription);
+            // console.log(subscription)
+          } else {
+            console.log('Subscription ID not found in AsyncStorage.');
+            await fetchData(); // Fetch data if the ID is not found
+          }
+          // setSubscriptionDetails(result);
+          setLoading(false); // Stop loading after the data is fetched or if an error occurs
+        } else {
+          fetchData();
+        }
+      };
+
+      checkAndFetchSubscription();
   }, [router.query]);
 
   const handleDelete = async () => {
