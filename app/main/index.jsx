@@ -69,7 +69,7 @@ const Home = () => {
     const user = await AsyncStorage.getItem("user");
     if (!user) {
       setIsSignedIn(false);
-      router.replace("welcome");
+      router.replace("/");
     } else {
       const userData = JSON.parse(user); // Parse the stored user data
       const userName = userData.user.givenName;
@@ -169,7 +169,7 @@ const Home = () => {
       await GoogleSignin.signOut();
       await AsyncStorage.removeItem("user");
       setIsSignedIn(false);
-      router.replace("welcome");
+      router.replace("/");
     } catch (error) {
       console.error("Error during logout:", error);
     } finally {
