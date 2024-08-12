@@ -25,7 +25,7 @@ const ViewCard = () => {
   const subID = params.subId;
   const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL;
   const [subscriptionDetails, setSubscriptionDetails] = useState({});
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   const getImageSource = (platform) => {
     const platformName = String(platform);
@@ -37,6 +37,44 @@ const ViewCard = () => {
         return images.netflix;
       case "disney+":
         return images.disneyplus;
+      case "sonyliv":
+        return images.sonyliv;
+      case "applemusic":
+        return images.applemusic;
+      case "spotify":
+        return images.spotify;
+      case "googleone":
+        return images.googleone;
+      case "amazonmusic":
+        return images.amazonmusic;
+      case "airtel":
+        return images.airtel;
+      case "jio":
+        return images.jio;
+      case "vi":
+        return images.vi;
+      case "dropbox":
+        return images.dropbox;
+      case "xstream":
+        return images.xstream;
+      case "tatasky":
+        return images.tatasky;
+      case "saavn":
+        return images.saavn;
+      case "youtube":
+        return images.youtube;
+      case "surfshark":
+        return images.surfshark;
+      case "crunchyroll":
+        return images.crunchyroll;
+      case "ficus":
+        return images.ficus;
+      case "act":
+        return images.act;
+      case "swiggy":
+        return images.swiggy;
+      case "zomato":
+        return images.zomato;
       // Add more cases as needed
       default:
         return null; // Fallback to null if no image is found
@@ -48,9 +86,9 @@ const ViewCard = () => {
     const platformName = String(platform);
     return (
       // <View className="items-center bg-black-100 rounded-3xl p-5 border-2 border-black w-[100px] h-[100px] self-center mb-2">
-        <Text className="text-white text-6xl font-pregular">
-          {platformName.charAt(0)}
-        </Text>
+      <Text className="text-white text-6xl font-pregular">
+        {platformName.charAt(0)}
+      </Text>
       // </View>
     );
   };
@@ -191,73 +229,77 @@ const ViewCard = () => {
               Subscription Details
             </Text>
           </View>
-          
+
           <View className="bg-black-100 mt-10 rounded-3xl p-5">
-          {loading ? (
-            <View className="flex-1 justify-center items-center h-full">
-            <ActivityIndicator size="xl" color="#F4CE14" className="flex-1 justify-center align-middle"/>
-            </View>
-          ) : (
-            <>
-            {getImageSource(subscriptionDetails.name) ? (
-              <Image
-                source={getImageSource(subscriptionDetails.name)}
-                className="w-24 h-24 mb-2 self-center rounded-3xl"
-              />
+            {loading ? (
+              <View className="flex-1 justify-center items-center h-full">
+                <ActivityIndicator
+                  size="xl"
+                  color="#F4CE14"
+                  className="flex-1 justify-center align-middle"
+                />
+              </View>
             ) : (
-              <View className="items-center bg-black-100 rounded-3xl p-5 border-2 border-black w-[100px] h-[100px] self-center mb-2">
-              {renderFallbackView(subscriptionDetails.name)}
-              </View>
-            )}
-            <Text className="text-white text-2xl font-pextrabold mb-4 text-center">
-              {subscriptionDetails.name}
-            </Text>
-            <View className="w-full h-[2px] bg-white/50 mb-4" />
-            <View className="w-full pl-2 pr-2">
-              <View className="flex-row justify-between mb-2">
-                <Text className="text-white text-base font-pextrabold">
-                  Started on:
+              <>
+                {getImageSource(subscriptionDetails.name) ? (
+                  <Image
+                    source={getImageSource(subscriptionDetails.name)}
+                    className="w-24 h-24 mb-2 self-center rounded-3xl"
+                  />
+                ) : (
+                  <View className="items-center bg-black-100 rounded-3xl p-5 border-2 border-black w-[100px] h-[100px] self-center mb-2">
+                    {renderFallbackView(subscriptionDetails.name)}
+                  </View>
+                )}
+                <Text className="text-white text-2xl font-pextrabold mb-4 text-center">
+                  {subscriptionDetails.name}
                 </Text>
-                <Text className="text-white text-base font-pmedium">
-                  {new Date(subscriptionDetails.start_date).toLocaleDateString(
-                    "en-GB"
-                  )}
-                </Text>
-              </View>
-              <View className="flex-row justify-between mb-2">
-                <Text className="text-white text-base font-pextrabold">
-                  Status:
-                </Text>
-                <Text className="text-white text-base font-pmedium">
-                  {subscriptionDetails.status}
-                </Text>
-              </View>
-              <View className="flex-row justify-between mb-2">
-                <Text className="text-white text-base font-pextrabold">
-                  Price:
-                </Text>
-                <Text className="text-white text-base font-pmedium">
-                  ₹{subscriptionDetails.price}
-                </Text>
-              </View>
-              <View className="flex-row justify-between mb-2">
-                <Text className="text-white text-base font-pextrabold">
-                  Renewal Period:
-                </Text>
-                <Text className="text-white text-base font-pmedium">
-                  {formattedFrequency}
-                </Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-white text-base font-pextrabold">
-                  Next Payment Date:
-                </Text>
-                <Text className="text-white text-base font-pmedium">
-                  {nextPaymentDate}
-                </Text>
-              </View>
-            </View>
-            </>
+                <View className="w-full h-[2px] bg-white/50 mb-4" />
+                <View className="w-full pl-2 pr-2">
+                  <View className="flex-row justify-between mb-2">
+                    <Text className="text-white text-base font-pextrabold">
+                      Started on:
+                    </Text>
+                    <Text className="text-white text-base font-pmedium">
+                      {new Date(
+                        subscriptionDetails.start_date
+                      ).toLocaleDateString("en-GB")}
+                    </Text>
+                  </View>
+                  <View className="flex-row justify-between mb-2">
+                    <Text className="text-white text-base font-pextrabold">
+                      Status:
+                    </Text>
+                    <Text className="text-white text-base font-pmedium">
+                      {subscriptionDetails.status}
+                    </Text>
+                  </View>
+                  <View className="flex-row justify-between mb-2">
+                    <Text className="text-white text-base font-pextrabold">
+                      Price:
+                    </Text>
+                    <Text className="text-white text-base font-pmedium">
+                      ₹{subscriptionDetails.price}
+                    </Text>
+                  </View>
+                  <View className="flex-row justify-between mb-2">
+                    <Text className="text-white text-base font-pextrabold">
+                      Renewal Period:
+                    </Text>
+                    <Text className="text-white text-base font-pmedium">
+                      {formattedFrequency}
+                    </Text>
+                  </View>
+                  <View className="flex-row justify-between">
+                    <Text className="text-white text-base font-pextrabold">
+                      Next Payment Date:
+                    </Text>
+                    <Text className="text-white text-base font-pmedium">
+                      {nextPaymentDate}
+                    </Text>
+                  </View>
+                </View>
+              </>
             )}
           </View>
           <View className="flex-row justify-between mt-5">

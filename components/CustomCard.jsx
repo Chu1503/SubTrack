@@ -16,6 +16,44 @@ const CustomCard = ({ platform, date, price, subscriptionID, onPress }) => {
         return images.netflix;
       case "disney+":
         return images.disneyplus;
+      case "sonyliv":
+        return images.sonyliv;
+      case "applemusic":
+        return images.applemusic;
+      case "spotify":
+        return images.spotify;
+      case "googleone":
+        return images.googleone;
+      case "amazonmusic":
+        return images.amazonmusic;
+      case "airtel":
+        return images.airtel;
+      case "jio":
+        return images.jio;
+      case "vi":
+        return images.vi;
+      case "dropbox":
+        return images.dropbox;
+      case "xstream":
+        return images.xstream;
+      case "tatasky":
+        return images.tatasky;
+      case "saavn":
+        return images.saavn;
+      case "youtube":
+        return images.youtube;
+      case "surfshark":
+        return images.surfshark;
+      case "crunchyroll":
+        return images.crunchyroll;
+      case "ficus":
+        return images.ficus;
+      case "act":
+        return images.act;
+      case "swiggy":
+        return images.swiggy;
+      case "zomato":
+        return images.zomato;
       // Add more cases as needed
       default:
         return null; // Fallback image
@@ -32,8 +70,7 @@ const CustomCard = ({ platform, date, price, subscriptionID, onPress }) => {
 
   // Function to render fallback view
   const renderFallbackView = () => (
-    <View
-      className="w-[60px] h-[60px] bg-black-100 rounded-3xl justify-center items-center mr-2 ml-[-4] border-2 border-black">
+    <View className="w-[60px] h-[60px] bg-black-100 rounded-3xl justify-center items-center mr-2 ml-[-4] border-2 border-black">
       <Text className="text-white text-2xl font-pregular">
         {platform.charAt(0)}
       </Text>
