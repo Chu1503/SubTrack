@@ -87,6 +87,22 @@ const Add = () => {
     setServiceName(selectedService); // Update the service name
   };
 
+  function isInteger(value) {
+    // Check for null or undefined
+    if (value === null || value === undefined) {
+      return false;
+    }
+  
+    // Check for special characters
+    if (/\D/.test(value)) {
+      return false;
+    }
+  
+    // Convert to number and check if it's an integer
+    const num = parseFloat(value);
+    return Number.isInteger(num);
+  }
+
   const validateFields = () => {
     if (!serviceName.trim()) {
       Alert.alert("Error Adding Subsciption", "Choose a service");
@@ -106,7 +122,7 @@ const Add = () => {
     }
     if (
       selectedPeriod === "Custom" &&
-      (isNaN(parseInt(customPeriodValue)) || parseInt(customPeriodValue, 10) <= 0)
+      (!isInteger(customPeriodValue) || parseInt(customPeriodValue, 10) <= 0)
     ) {
       Alert.alert(
         "Error Adding Subsciption",
