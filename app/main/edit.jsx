@@ -189,7 +189,7 @@ const Edit = () => {
     }
     if (
       selectedPeriod === "Custom" &&
-      (isNaN(parseInt(customPeriodValue)) || parseInt(customPeriodValue) <= 0)
+      (isNaN(parseInt(customPeriodValue)) || parseInt(customPeriodValue, 10) <= 0)
     ) {
       Alert.alert(
         "Error Adding Subsciption",
@@ -227,6 +227,7 @@ const Edit = () => {
           `${backend_url}/editSubDetails`,
           data
         );
+        await AsyncStorage.removeItem('subDetails');
         console.log("Sub creation response:", response.data);
       } catch (err) {
         console.error(err.message);

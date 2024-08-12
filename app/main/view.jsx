@@ -234,6 +234,7 @@ const ViewCard = () => {
                   `${backend_url}/deleteSub`,
                   postData
                 );
+                await AsyncStorage.removeItem('subDetails');
                 router.replace("/main");
               } catch (error) {
                 console.error(error);

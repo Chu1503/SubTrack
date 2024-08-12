@@ -8,7 +8,7 @@ import CustomButton from "../components/CustomButton";
 import { images } from "../constants";
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-export default function Welcome() {
+const Welcome = () => {
   const [error, setError] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const router = useRouter();
@@ -65,3 +65,5 @@ export default function Welcome() {
     </SafeAreaView>
   );
 }
+
+export default Welcome;

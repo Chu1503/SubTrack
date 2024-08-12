@@ -5,6 +5,7 @@ import { useFonts } from 'expo-font';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 
 const RootLayout = () => {
+  const [loading, setLoading] = useState(true);
   const [isSignedIn, setIsSignedIn] = useState(null); // Change to null initially
   const [fontsLoaded, error] = useFonts({
     "TT-Norms-Pro-Black": require("../assets/fonts/TT-Norms-Pro-Black.otf"),
@@ -23,19 +24,24 @@ const RootLayout = () => {
       const user = await AsyncStorage.getItem('user');
       console.log('User from AsyncStorage:', user);
       setIsSignedIn(!!user);
+      setLoading(false);
     };
     checkAuthStatus();
   }, []);
   
-  if (!fontsLoaded && !error) {
-    return null;
+
+  if (loading || !fontsLoaded) {
+    return (
+      <View className="bg-primary flex-1 justify-center items-center">
+        <ActivityIndicator size="xl" color="#F4CE14" />
+      </View>
+    );
   }
 
-  // Show loading overlay if authentication state is not determined yet
   if (isSignedIn === null) {
     return (
-      <View>
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View className="bg-primary flex-1 justify-center items-center">
+        <ActivityIndicator size="xl" color="#F4CE14" />
       </View>
     );
   }
@@ -50,14 +56,5 @@ const RootLayout = () => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF', // or any color you prefer
-  },
-});
 
 export default RootLayout;

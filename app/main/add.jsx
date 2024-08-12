@@ -106,7 +106,7 @@ const Add = () => {
     }
     if (
       selectedPeriod === "Custom" &&
-      (isNaN(parseInt(customPeriodValue)) || parseInt(customPeriodValue) <= 0)
+      (isNaN(parseInt(customPeriodValue)) || parseInt(customPeriodValue, 10) <= 0)
     ) {
       Alert.alert(
         "Error Adding Subsciption",
@@ -141,6 +141,7 @@ const Add = () => {
       try {
         const response = await axios.post(`${backend_url}/sub`, data);
         console.log("Sub creation response:", response.data);
+        await AsyncStorage.removeItem('subDetails');
       } catch (err) {
         console.error(err);
       }
