@@ -49,10 +49,10 @@ const RootLayout = () => {
   return (
     <>
       <Stack>
-        <Stack.Screen name="welcome" options={{ headerShown: false }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="main" options={{ headerShown: false }} />
       </Stack>
-      {isSignedIn ? <Redirect href="/main" /> : <Redirect href="/welcome" />}
+      {isSignedIn ? <Redirect href="/main" /> : <Redirect href="/" />}
     </>
   );
 };
