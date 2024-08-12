@@ -15,7 +15,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Feather from "@expo/vector-icons/Feather";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { images } from "../../constants";
-import { secondary } from "../../constants/colors";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -35,7 +35,7 @@ const ViewCard = () => {
         return images.primevideo;
       case "netflix":
         return images.netflix;
-      case "disney+":
+      case "disney+hotstar":
         return images.disneyplus;
       case "sonyliv":
         return images.sonyliv;
@@ -51,30 +51,38 @@ const ViewCard = () => {
         return images.airtel;
       case "jio":
         return images.jio;
-      case "vi":
+      case "vodafoneidea":
         return images.vi;
       case "dropbox":
         return images.dropbox;
-      case "xstream":
+      case "airtelxstream":
         return images.xstream;
       case "tatasky":
         return images.tatasky;
-      case "saavn":
+      case "jiosaavn":
         return images.saavn;
-      case "youtube":
+      case "youtubepremium":
         return images.youtube;
       case "surfshark":
         return images.surfshark;
       case "crunchyroll":
         return images.crunchyroll;
-      case "ficus":
+      case "focisbroadband":
         return images.ficus;
-      case "act":
+      case "actfibernet":
         return images.act;
       case "swiggy":
         return images.swiggy;
       case "zomato":
         return images.zomato;
+      case "zee5":
+        return images.zee5;
+      case "jiocinema":
+        return images.jiocinema;
+      case "chu":
+        return images.chuImage;
+      case "manav":
+        return images.manavImage;
       // Add more cases as needed
       default:
         return null; // Fallback to null if no image is found
@@ -258,6 +266,22 @@ const ViewCard = () => {
                 <View className="w-full pl-2 pr-2">
                   <View className="flex-row justify-between mb-2">
                     <Text className="text-white text-base font-pextrabold">
+                      Status:
+                    </Text>
+                    <View className="flex-row items-center">
+                      {subscriptionDetails.status === "active" ? (
+                        <AntDesign name="checkcircle" size={24} color="green" />
+                      ) : subscriptionDetails.status === "expired" ? (
+                        <MaterialIcons name="cancel" size={24} color="red" />
+                      ) : null}
+                      <Text className="text-white text-base font-pmedium ml-1">
+                        {subscriptionDetails.status.charAt(0).toUpperCase() +
+                          subscriptionDetails.status.slice(1)}
+                      </Text>
+                    </View>
+                  </View>
+                  <View className="flex-row justify-between mb-2">
+                    <Text className="text-white text-base font-pextrabold">
                       Started on:
                     </Text>
                     <Text className="text-white text-base font-pmedium">
@@ -266,14 +290,7 @@ const ViewCard = () => {
                       ).toLocaleDateString("en-GB")}
                     </Text>
                   </View>
-                  <View className="flex-row justify-between mb-2">
-                    <Text className="text-white text-base font-pextrabold">
-                      Status:
-                    </Text>
-                    <Text className="text-white text-base font-pmedium">
-                      {subscriptionDetails.status}
-                    </Text>
-                  </View>
+
                   <View className="flex-row justify-between mb-2">
                     <Text className="text-white text-base font-pextrabold">
                       Price:
@@ -287,7 +304,10 @@ const ViewCard = () => {
                       Renewal Period:
                     </Text>
                     <Text className="text-white text-base font-pmedium">
-                      {formattedFrequency}
+                      {formattedFrequency === "semi-annually"
+                        ? "Semi-Annually"
+                        : formattedFrequency.charAt(0).toUpperCase() +
+                          formattedFrequency.slice(1)}
                     </Text>
                   </View>
                   <View className="flex-row justify-between">

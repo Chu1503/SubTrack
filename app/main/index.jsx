@@ -55,6 +55,8 @@ const Home = () => {
   const [monthlyPrice, setMonthlyPrice] = useState(0);
   const [isSignedIn, setIsSignedIn] = useState(true);
   const [userName, setuserName] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [loadingLogout, setLoadingLogout] = useState(false); // Add this state
   const router = useRouter();
 
   const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL;
@@ -70,7 +72,6 @@ const Home = () => {
       router.replace("welcome");
     } else {
       const userData = JSON.parse(user); // Parse the stored user data
-      // Access the email property from userData (assuming it's stored there)
       const userName = userData.user.givenName;
       const userId = userData.user.id;
       const userEmail = userData.user.email;
@@ -126,81 +127,90 @@ const Home = () => {
   };
 
   const handleLogout = async () => {
+    setLoadingLogout(true); // Start loading indicator
+
     try {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
       await AsyncStorage.removeItem("user");
       setIsSignedIn(false);
+      router.replace("welcome");
     } catch (error) {
       console.error("Error during logout:", error);
+    } finally {
+      setLoadingLogout(false); // Stop loading indicator
     }
   };
 
-  const [loading, setLoading] = useState(true);
-
   return (
     <SafeAreaView className="bg-primary h-full">
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <View className="w-full justify-center h-full px-4 my-6">
-          <View className="flex-1 flex-row justify-between items-center mt-7">
-            <TouchableOpacity
-              className="w-[40px] h-[40px] rounded-full justify-center items-center"
-              onPress={handleLogout}
-            >
-              <Text className="text-primary text-3xl">
-                <SimpleLineIcons name="logout" size={24} color="red" />
-              </Text>
-            </TouchableOpacity>
-            <View className="flex-1 justify-center items-center">
-              <Image
-                source={images.logo}
-                resizeMode="contain"
-                className="w-[150px] h-[35px]"
-              />
-            </View>
-            <TouchableOpacity
-              className="w-[60px] h-[40px] border-2 border-secondary rounded-full justify-center items-center"
-              onPress={() => router.push("/main/add")}
-            >
-              <Text className="text-secondary text-3xl">+</Text>
-            </TouchableOpacity>
-          </View>
-
-          <Text className="text-xl text-white font-pbold text-center">
-            Hello{" "}
-            <Text className="text-secondary font-pextrabold">{userName}</Text>!
-          </Text>
-          <Text className="text-lg text-white text-regular mt-5 font-pmedium">
-            Monthly Spending
-          </Text>
-          <Text className="text-5xl text-secondary mt-1 mb-1 font-pextrabold pt-1">
-            ₹{monthlyPrice.toFixed(2)}
-          </Text>
-          {/* <Text className="text-md text-white text-regular font-pmedium mb-2">Updated on XX/XX/XXXX</Text> */}
-          {loading ? (
-            <View className="mt-40">
-            <ActivityIndicator size="xl" color="#F4CE14" className="flex-1 justify-center align-middle"/>
-            </View>
-          ) : (
-            subscriptions.map((subscription) => (
-              <CustomCard
-                key={subscription.ID}
-                subscriptionID={subscription.ID}
-                platform={subscription.name}
-                date={new Date(subscription.start_date).toLocaleDateString(
-                  "en-GB"
-                )}
-                price={`₹${subscription.price}`}
-              />
-            ))
-          )}
-          <View className="mb-10"></View>
+      {loadingLogout ? ( // Show ActivityIndicator during logout
+        <View className="flex-1 justify-center items-center h-full">
+          <ActivityIndicator size="xl" color="#F4CE14" />
         </View>
-      </ScrollView>
+      ) : (
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <View className="w-full justify-center h-full px-4 my-6">
+            <View className="flex-1 flex-row justify-between items-center mt-7">
+              <TouchableOpacity
+                className="w-[40px] h-[40px] rounded-full justify-center items-center"
+                onPress={handleLogout}
+              >
+                <Text className="text-primary text-3xl">
+                  <SimpleLineIcons name="logout" size={24} color="red" />
+                </Text>
+              </TouchableOpacity>
+              <View className="flex-1 justify-center items-center">
+                <Image
+                  source={images.logo}
+                  resizeMode="contain"
+                  className="w-[150px] h-[35px]"
+                />
+              </View>
+              <TouchableOpacity
+                className="w-[60px] h-[40px] border-2 border-secondary rounded-full justify-center items-center"
+                onPress={() => router.push("/main/add")}
+              >
+                <Text className="text-secondary text-3xl">+</Text>
+              </TouchableOpacity>
+            </View>
+
+            <Text className="text-xl text-white font-pbold text-center">
+              Hello{" "}
+              <Text className="text-secondary font-pextrabold">{userName}</Text>!
+            </Text>
+            <Text className="text-lg text-white text-regular mt-5 font-pmedium">
+              Monthly Spending
+            </Text>
+            <Text className="text-5xl text-secondary mt-1 mb-1 font-pextrabold pt-1">
+              ₹{monthlyPrice.toFixed(2)}
+            </Text>
+            {/* <Text className="text-md text-white text-regular font-pmedium mb-2">Updated on XX/XX/XXXX</Text> */}
+            {loading ? (
+              <View className="mt-40">
+                <ActivityIndicator size="xl" color="#F4CE14" className="flex-1 justify-center align-middle" />
+              </View>
+            ) : (
+              subscriptions.map((subscription) => (
+                <CustomCard
+                  key={subscription.ID}
+                  subscriptionID={subscription.ID}
+                  platform={subscription.name}
+                  date={new Date(subscription.start_date).toLocaleDateString(
+                    "en-GB"
+                  )}
+                  price={`₹${subscription.price}`}
+                />
+              ))
+            )}
+            <View className="mb-10"></View>
+          </View>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

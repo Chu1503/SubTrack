@@ -194,7 +194,7 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
     { name: "Swiggy", image: images.swiggy },
     { name: "Tata Sky", image: images.tatasky },
     { name: "YouTube Premium", image: images.youtube },
-    { name: "Vodafone India", image: images.vi },
+    { name: "Vodafone Idea", image: images.vi },
     { name: "ZEE5", image: images.zee5 },
     { name: "Zomato", image: images.zomato },
   ];

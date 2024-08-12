@@ -33,10 +33,10 @@ export default function Welcome() {
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="flex-1 justify-start items-center px-4 mt-10">
+        <View className="flex-1 justify-start items-center px-4 mt-28">
           <Image
             source={images.logoIcon}
-            className="w-[130px] h-[130px] mb-3"
+            className="w-[150px] h-[150px] mb-3"
             resizeMode="contain"
           />
           <Image
@@ -47,7 +47,7 @@ export default function Welcome() {
         </View>
         <View className="flex-grow justify-end items-center px-4 pb-8">
           <View className="relative mt-5 w-full">
-            <Text className="text-[45px] text-white font-bold text-left">
+            <Text className="text-[45px] text-white font-bold text-left p-2">
               Manage all your subscriptions {"\n"}
               <Text className="text-secondary">in one place!</Text>
             </Text>

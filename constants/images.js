@@ -30,6 +30,8 @@ import ficus from "../assets/images/ficus.png";
 import act from "../assets/images/act.png";
 import swiggy from "../assets/images/swiggy.png";
 import zomato from "../assets/images/zomato.png";
+import chuImage from "../assets/images/chuImage.png";
+import manavImage from "../assets/images/manavImage.png";
 
 
 export default { 
@@ -63,4 +65,6 @@ export default {
   act,
   swiggy,
   zomato,
+  chuImage,
+  manavImage,
 };

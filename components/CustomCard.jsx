@@ -14,7 +14,7 @@ const CustomCard = ({ platform, date, price, subscriptionID, onPress }) => {
         return images.primevideo;
       case "netflix":
         return images.netflix;
-      case "disney+":
+      case "disney+hotstar":
         return images.disneyplus;
       case "sonyliv":
         return images.sonyliv;
@@ -30,30 +30,38 @@ const CustomCard = ({ platform, date, price, subscriptionID, onPress }) => {
         return images.airtel;
       case "jio":
         return images.jio;
-      case "vi":
+      case "vodafoneidea":
         return images.vi;
       case "dropbox":
         return images.dropbox;
-      case "xstream":
+      case "airtelxstream":
         return images.xstream;
       case "tatasky":
         return images.tatasky;
-      case "saavn":
+      case "jiosaavn":
         return images.saavn;
-      case "youtube":
+      case "youtubepremium":
         return images.youtube;
       case "surfshark":
         return images.surfshark;
       case "crunchyroll":
         return images.crunchyroll;
-      case "ficus":
+      case "focisbroadband":
         return images.ficus;
-      case "act":
+      case "actfibernet":
         return images.act;
       case "swiggy":
         return images.swiggy;
       case "zomato":
         return images.zomato;
+      case "zee5":
+        return images.zee5;
+      case "jiocinema":
+        return images.jiocinema;
+      case "chu":
+        return images.chuImage;
+      case "manav":
+        return images.manavImage;
       // Add more cases as needed
       default:
         return null; // Fallback image

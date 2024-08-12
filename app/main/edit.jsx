@@ -8,6 +8,7 @@ import {
   Modal,
   TouchableOpacity,
   ActivityIndicator,
+  Alert
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
