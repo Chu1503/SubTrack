@@ -23,6 +23,8 @@ import axios from "axios";
 
 const { height, width } = Dimensions.get("window");
 
+const SWIPE_THRESHOLD = 0.3;
+
 const CustomModal = ({ visible, onClose, onSelectService }) => {
   const backend_url = process.env.EXPO_PUBLIC_BACKEND_URL;
   const [translateY, setTranslateY] = useState(0);
@@ -69,7 +71,9 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
 
   const handleGestureEnd = ({ nativeEvent }) => {
     const shouldClose =
-      nativeEvent.translationY > height * 0.3 || nativeEvent.velocityY > 1000;
+      nativeEvent.translationY > height * SWIPE_THRESHOLD ||
+      nativeEvent.velocityY > 1000;
+
     if (shouldClose) {
       onClose();
     } else {
@@ -253,7 +257,10 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
 
               {activeTab === "List" ? (
                 <View className="flex-1">
-                  <ScrollView className="p-3">
+                  <ScrollView
+                    className="p-3"
+                    contentContainerStyle={{ paddingBottom: 25 }}
+                  >
                     {platforms.map((platform, index) => (
                       <CustomCardList
                         key={index}

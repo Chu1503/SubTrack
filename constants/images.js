@@ -31,6 +31,7 @@ import act from "../assets/images/act.png";
 import swiggy from "../assets/images/swiggy.png";
 import zomato from "../assets/images/zomato.png";
 
+
 export default { 
   logo, 
   logoIcon, 
