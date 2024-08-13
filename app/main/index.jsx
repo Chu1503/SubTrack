@@ -85,6 +85,7 @@ const Home = () => {
         const response = await axios.post(`${backend_url}/user`, {
           id: userId,
           email: userEmail,
+          token: token,
           body: { services: [], expoToken: token },
         });
         console.log("User creation response:", response.data);

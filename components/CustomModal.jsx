@@ -101,10 +101,12 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
           const user = await AsyncStorage.getItem("user");
           const userData = JSON.parse(user);
           const userId = userData.user.id;
+          const tokenString = await AsyncStorage.getItem("expoPushToken");
+          const token = JSON.parse(tokenString);
 
           const post_data = {
             user_id: userId,
-            custom: { services: updatedPlatforms },
+            custom: { services: updatedPlatforms, expoToken: token },
           };
 
           try {
@@ -142,10 +144,12 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
         const user = await AsyncStorage.getItem("user");
         const userData = JSON.parse(user);
         const userId = userData.user.id;
+        const tokenString = await AsyncStorage.getItem("expoPushToken");
+        const token = JSON.parse(tokenString);
 
         const post_data = {
           user_id: userId,
-          custom: { services: updatedPlatforms },
+          custom: { services: updatedPlatforms, expoToken: token },
         };
 
         try {
