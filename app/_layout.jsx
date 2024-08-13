@@ -3,6 +3,10 @@ import { Stack, Redirect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import * as SplashScreen from 'expo-splash-screen';
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
   const [loading, setLoading] = useState(true);
@@ -25,20 +29,14 @@ const RootLayout = () => {
       console.log('User from AsyncStorage:', user);
       setIsSignedIn(!!user);
       setLoading(false);
+      SplashScreen.hideAsync();
     };
     checkAuthStatus();
   }, []);
   
 
-  if (loading || !fontsLoaded) {
-    return (
-      <View className="bg-primary flex-1 justify-center items-center">
-        <ActivityIndicator size="xl" color="#F4CE14" />
-      </View>
-    );
-  }
-
-  if (isSignedIn === null) {
+  // Check if either fonts are still loading or authentication status is not yet determined
+  if (loading || !fontsLoaded || isSignedIn === null) {
     return (
       <View className="bg-primary flex-1 justify-center items-center">
         <ActivityIndicator size="xl" color="#F4CE14" />
