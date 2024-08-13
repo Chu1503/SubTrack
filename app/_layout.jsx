@@ -4,11 +4,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
+import { usePushNotifications } from "../constants/useNotifications";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
+  const { expoPushToken, notification } = usePushNotifications();
   const [loading, setLoading] = useState(true);
   const [isSignedIn, setIsSignedIn] = useState(null); // Change to null initially
   const [fontsLoaded, error] = useFonts({
@@ -34,6 +36,13 @@ const RootLayout = () => {
     checkAuthStatus();
   }, []);
   
+
+    // Ensure expoPushToken is initialized before use
+    useEffect(() => {
+      if (expoPushToken && expoPushToken.data) {
+        console.log(expoPushToken.data);
+      }
+    }, [expoPushToken]);
 
   // Check if either fonts are still loading or authentication status is not yet determined
   if (loading || !fontsLoaded || isSignedIn === null) {
