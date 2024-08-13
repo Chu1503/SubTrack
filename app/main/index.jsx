@@ -67,6 +67,8 @@ const Home = () => {
 
   const checkAuthStatus = async () => {
     const user = await AsyncStorage.getItem("user");
+    const tokenString = await AsyncStorage.getItem("expoPushToken");
+    const token = JSON.parse(tokenString);
     if (!user) {
       setIsSignedIn(false);
       router.replace("/");
@@ -83,7 +85,7 @@ const Home = () => {
         const response = await axios.post(`${backend_url}/user`, {
           id: userId,
           email: userEmail,
-          body: { services: [] },
+          body: { services: [], expoToken: token },
         });
         console.log("User creation response:", response.data);
         // Handle successful user creation (if needed)

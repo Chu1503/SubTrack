@@ -39,9 +39,18 @@ const RootLayout = () => {
 
     // Ensure expoPushToken is initialized before use
     useEffect(() => {
-      if (expoPushToken && expoPushToken.data) {
-        console.log(expoPushToken.data);
-      }
+      const savePushToken = async () => {
+        if (expoPushToken && expoPushToken.data) {
+          try {
+            await AsyncStorage.setItem("expoPushToken", JSON.stringify(expoPushToken.data));
+            console.log("Pushed to AsyncStorage:", expoPushToken.data);
+          } catch (error) {
+            console.error("Failed to save push token:", error);
+          }
+        }
+      };
+  
+      savePushToken();
     }, [expoPushToken]);
 
   // Check if either fonts are still loading or authentication status is not yet determined

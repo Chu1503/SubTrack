@@ -5,15 +5,16 @@ go 1.21.6
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 	github.com/gofiber/fiber/v2 v2.52.5
+	github.com/google/uuid v1.5.0
 	github.com/joho/godotenv v1.5.1
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.11
-	github.com/google/uuid v1.5.0
 )
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
+	github.com/oliveroneill/exponent-server-sdk-golang v0.0.0-20210823140141-d050598be512 // indirect
 	gorm.io/driver/mysql v1.5.6 // indirect
 )
 
