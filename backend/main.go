@@ -5,6 +5,7 @@ import (
 	"log"
 	"subscription-manager-backend/database"
 	"subscription-manager-backend/routes"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -16,7 +17,8 @@ func main() {
 	// Connect to the database
 	database.ConnectToDB()
 
-	// routes.SendNotif()
+	// Start periodic notifications in a goroutine with a customizable interval
+	go startNotificationTicker(1 * time.Minute) // Customize the interval here
 
 	// Basic route for testing server status
 	app.Get("/", func(c *fiber.Ctx) error {
@@ -42,5 +44,17 @@ func main() {
 	fmt.Printf("Server is running on http://localhost:%d\n", port)
 	if err := app.Listen(fmt.Sprintf(":%d", port)); err != nil {
 		log.Fatalf("Error starting server: %v\n", err)
+	}
+}
+
+// Function to start a ticker that calls SendNotif with a customizable interval
+func startNotificationTicker(interval time.Duration) {
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+
+	for tick := range ticker.C {
+		// This block runs each time the ticker ticks
+		routes.SendNotif()
+		log.Printf("Notifications sent successfully at %v", tick)
 	}
 }

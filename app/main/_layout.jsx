@@ -4,8 +4,7 @@ export default function MainLayout() {
   return (
     <Stack>
       <Stack.Screen name="index" options={{
-        headerShown: false, animationTypeForReplace: 'push',
-        animation: 'slide_from_left'
+        headerShown: false, animation: 'none'
       }} />
       <Stack.Screen name="add" options={{
         headerShown: false, animationTypeForReplace: 'push',
