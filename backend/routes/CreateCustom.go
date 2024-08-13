@@ -10,7 +10,7 @@ import (
 	"gorm.io/datatypes"
 )
 
-func CreateService(c *fiber.Ctx) error {
+func CreateCustom(c *fiber.Ctx) error {
 	// Define a struct to parse the request body
 	type UpdateRequest struct {
 		UserID string         `json:"user_id" valid:"required~User ID is required"`

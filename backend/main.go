@@ -36,8 +36,8 @@ func main() {
 	app.Post("/deleteSub", routes.DeleteSub)
 
 	// Service routes
-	app.Post("/service", routes.CreateService)
-	app.Get("/service/:user_id", routes.GetServices)
+	app.Post("/service", routes.CreateCustom)
+	app.Get("/service/:user_id", routes.GetCustom)
 
 	// Route to manually trigger notifications
 	app.Get("/send-notifications/:key", routes.ForceSendNotif)

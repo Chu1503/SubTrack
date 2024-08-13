@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetServices(c *fiber.Ctx) error {
+func GetCustom(c *fiber.Ctx) error {
 	userID := c.Params("user_id")
 
 	// Query the database for the user
