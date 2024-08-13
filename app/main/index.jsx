@@ -64,10 +64,39 @@ const Home = () => {
   useEffect(() => {
     GoogleSignin.configure();
   }, []);
+  const checkExpoToken = async (token) => {
+    const user = await AsyncStorage.getItem("user");
+    const userData = JSON.parse(user);
+    const userId = userData.user.id;
+    try {
+      const response = await axios.get(`${backend_url}/service/${userId}`);
+      const token_data = response.data.expoToken;
+      const platforms = response.data.services;
+      if (token !== token_data){
+        console.log("token not equal")
+        const post_data = {
+          user_id: userId,
+          custom: { services: platforms, expoToken: JSON.parse(token) },
+        };
+        try {
+          const response = await axios.post(
+            `${backend_url}/service`,
+            post_data
+          );
+          console.log("Response from server:", response.data);
+        } catch (error) {
+          console.error("Failed to update token:", error);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch custom:", error);
+    }
+  };
 
   const checkAuthStatus = async () => {
     const user = await AsyncStorage.getItem("user");
     const tokenString = await AsyncStorage.getItem("expoPushToken");
+    checkExpoToken(tokenString);
     const token = JSON.parse(tokenString);
     if (!user) {
       setIsSignedIn(false);
@@ -85,7 +114,6 @@ const Home = () => {
         const response = await axios.post(`${backend_url}/user`, {
           id: userId,
           email: userEmail,
-          token: token,
           body: { services: [], expoToken: token },
         });
         console.log("User creation response:", response.data);
@@ -144,7 +172,7 @@ const Home = () => {
       if (isSignedIn) {
         const result = await checkItemExists("subDetails");
         if (result) {
-          console.log('Item exists in AsyncStorage: ', result);
+          // console.log('Item exists in AsyncStorage: ', result);
           setSubscriptions(result);
           setMonthlyPrice(calculateMonthlyPrice(result));
           setLoading(false); // Stop loading after the data is fetched or if an error occurs
