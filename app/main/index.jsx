@@ -66,6 +66,7 @@ const Home = () => {
   }, []);
   const checkExpoToken = async (token) => {
     const user = await AsyncStorage.getItem("user");
+    if(user){
     const userData = JSON.parse(user);
     const userId = userData.user.id;
     try {
@@ -91,6 +92,7 @@ const Home = () => {
     } catch (error) {
       console.error("Failed to fetch custom:", error);
     }
+  }
   };
 
   const checkAuthStatus = async () => {
