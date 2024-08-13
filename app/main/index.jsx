@@ -169,6 +169,7 @@ const Home = () => {
       await GoogleSignin.signOut();
       await AsyncStorage.removeItem("user");
       setIsSignedIn(false);
+      console.log("User logged out successfully");
       router.replace("/");
     } catch (error) {
       console.error("Error during logout:", error);

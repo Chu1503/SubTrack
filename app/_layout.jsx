@@ -49,8 +49,8 @@ const RootLayout = () => {
   return (
     <>
       <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false , animation: "none"}} />
-        <Stack.Screen name="main" options={{ headerShown: false, animation: "none" }} />
+        <Stack.Screen name="index" options={{ headerShown: false, animation:'none' }} />
+        <Stack.Screen name="main" options={{ headerShown: false, animation:'slide_from_right' }} />
       </Stack>
       {isSignedIn ? <Redirect href="/main" /> : <Redirect href="/" />}
     </>
