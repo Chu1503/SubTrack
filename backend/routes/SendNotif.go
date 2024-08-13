@@ -3,6 +3,7 @@ package routes
 import (
 	"fmt"
 	"log"
+	"os"
 	"subscription-manager-backend/database"
 	"subscription-manager-backend/helpers"
 	"subscription-manager-backend/models"
@@ -67,6 +68,13 @@ func SendNotif() error {
 }
 
 func ForceSendNotif(c *fiber.Ctx) error {
+	key := c.Params("key")
+	admin_key := os.Getenv("ADMIN_KEY")
+	if key != admin_key || key == "" {
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"error": "Unauthorized Admin",
+		})
+	}
 	err := SendNotif()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

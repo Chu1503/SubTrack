@@ -40,7 +40,7 @@ func main() {
 	app.Get("/service/:user_id", routes.GetServices)
 
 	// Route to manually trigger notifications
-	app.Get("/send-notifications", routes.ForceSendNotif)
+	app.Get("/send-notifications/:key", routes.ForceSendNotif)
 
 	// Start the Fiber app
 	port := 8080
