@@ -18,7 +18,7 @@ func main() {
 	database.ConnectToDB()
 
 	// Start periodic notifications in a goroutine with a customizable interval
-	go startNotificationTicker(1 * time.Minute) // Customize the interval here
+	go startNotificationTicker(1440 * time.Minute) // Customize the interval here
 
 	// Basic route for testing server status
 	app.Get("/", func(c *fiber.Ctx) error {
@@ -39,6 +39,9 @@ func main() {
 	app.Post("/service", routes.CreateService)
 	app.Get("/service/:user_id", routes.GetServices)
 
+	// Route to manually trigger notifications
+	app.Get("/send-notifications", routes.ForceSendNotif)
+
 	// Start the Fiber app
 	port := 8080
 	fmt.Printf("Server is running on http://localhost:%d\n", port)
@@ -53,8 +56,11 @@ func startNotificationTicker(interval time.Duration) {
 	defer ticker.Stop()
 
 	for tick := range ticker.C {
-		// This block runs each time the ticker ticks
-		routes.SendNotif()
-		log.Printf("Notifications sent successfully at %v", tick)
+		err := routes.SendNotif()
+		if err != nil {
+			log.Printf("Error sending notifications: %v", err)
+		} else {
+			log.Printf("Notifications sent successfully at %v", tick)
+		}
 	}
 }
