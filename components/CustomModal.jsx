@@ -207,7 +207,7 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
             className="flex-1 justify-end"
             style={{ transform: [{ translateY }] }}
           >
-            <View className="h-full bg-black-100 rounded-t-[30px] w-full">
+            <View className="h-[95vh] bg-black-100 rounded-t-[30px] w-full">
               <PanGestureHandler
                 ref={panRef}
                 onGestureEvent={handleGesture}
@@ -278,7 +278,7 @@ const CustomModal = ({ visible, onClose, onSelectService }) => {
                       onPress={handleOpenForm}
                       className="bg-secondary p-3 rounded-full w-[90vw] mt-4 mb-2 border-2 border-gray"
                     >
-                      <Text className="text-primary text-center text-lg">
+                      <Text className="text-primary text-center text-lg font-psemibold">
                         Add Custom Service
                       </Text>
                     </TouchableOpacity>

@@ -333,7 +333,7 @@ const Add = () => {
               onPress={handleSubmit}
               className="bg-secondary p-2 rounded-full w-[90vw]"
             >
-              <Text className="text-primary text-center text-base">
+              <Text className="text-primary text-center text-lg font-psemibold">
                 Add Subscription
               </Text>
             </TouchableOpacity>

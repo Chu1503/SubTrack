@@ -50,7 +50,7 @@ const CustomServiceModal = ({ visible, onClose, onSubmit, serviceName, setServic
               onStartShouldSetResponder={() => true}
             >
               {/* <Image source={images.dash} resizeMode='contain' className="h-[35px] self-center mb-4" /> */}
-              <Text className="text-white text-3xl mt-4 mb-4">Create a custom service</Text>
+              <Text className="text-white text-3xl mt-4 mb-4 font-psemibold">Create a custom service</Text>
               <FormField
                 title="What's your service?"
                 value={serviceName}
@@ -60,7 +60,7 @@ const CustomServiceModal = ({ visible, onClose, onSubmit, serviceName, setServic
               />
               <View className="flex-row justify-between flex-end">
                 <TouchableOpacity onPress={() => { onSubmit(); onClose(); }} className="bg-secondary p-2 rounded-full w-[90vw] mb-7">
-                  <Text className="text-primary text-center text-base">Create Service</Text>
+                  <Text className="text-primary text-center text-lg font-psemibold">Create Service</Text>
                 </TouchableOpacity>
               </View>
             </Animated.View>

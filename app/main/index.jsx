@@ -191,13 +191,14 @@ const Home = () => {
           }
         >
           <View className="w-full justify-center h-full px-4 my-6">
-            <View className="flex-1 flex-row justify-between items-center mt-7">
+            <View className="flex-1 flex-row justify-between items-center mt-5">
               <TouchableOpacity
-                className="w-[40px] h-[40px] rounded-full justify-center items-center"
+              className="w-[60px] h-[40px] rounded-full justify-center items-center"
+                // className="w-[40px] h-[40px] rounded-full justify-center items-center"
                 onPress={handleLogout}
               >
                 <Text className="text-primary text-3xl">
-                  <SimpleLineIcons name="logout" size={24} color="red" />
+                  <SimpleLineIcons name="logout" size={25} color="red" />
                 </Text>
               </TouchableOpacity>
               <View className="flex-1 justify-center items-center">
