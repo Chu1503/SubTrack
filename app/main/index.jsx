@@ -189,9 +189,16 @@ const Home = () => {
     checkAuthAndFetchSubscriptions();
   }, [isSignedIn]);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    fetchSubscriptions().finally(() => setRefreshing(false));
+  const onRefresh = async () => {
+    const result = await checkItemExists("subDetails");
+    if (result) {
+      // console.log('Item exists in AsyncStorage: ', result);
+      setSubscriptions(result);
+      setMonthlyPrice(calculateMonthlyPrice(result));
+      setLoading(false); // Stop loading after the data is fetched or if an error occurs
+    } else {
+      fetchSubscriptions();
+    }
   };
 
   const handleLogout = async () => {
