@@ -10,8 +10,8 @@ const CustomCard = ({ platform, date, price, subscriptionID, onPress }) => {
   const getImageSource = (platform) => {
     const resultString = platform.replace(/\s+/g, "").toLowerCase();
     switch (resultString.toLowerCase()) {
-      case "primevideo":
-        return images.primevideo;
+      case "amazonprime":
+        return images.prime;
       case "netflix":
         return images.netflix;
       case "disney+hotstar":
@@ -24,8 +24,6 @@ const CustomCard = ({ platform, date, price, subscriptionID, onPress }) => {
         return images.spotify;
       case "googleone":
         return images.googleone;
-      case "amazonmusic":
-        return images.amazonmusic;
       case "airtel":
         return images.airtel;
       case "jio":

@@ -18,6 +18,7 @@ import { images } from "../../constants";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from '@react-native-community/netinfo';
 
 const ViewCard = () => {
   const router = useRouter();
@@ -31,8 +32,8 @@ const ViewCard = () => {
     const platformName = String(platform);
     const resultString = platformName.replace(/\s+/g, "").toLowerCase();
     switch (resultString.toLowerCase()) {
-      case "primevideo":
-        return images.primevideo;
+      case "amazonprime":
+        return images.prime;
       case "netflix":
         return images.netflix;
       case "disney+hotstar":
@@ -45,8 +46,6 @@ const ViewCard = () => {
         return images.spotify;
       case "googleone":
         return images.googleone;
-      case "amazonmusic":
-        return images.amazonmusic;
       case "airtel":
         return images.airtel;
       case "jio":
@@ -209,6 +208,12 @@ const ViewCard = () => {
   }, [router.query]);
 
   const handleDelete = async () => {
+    const state = await NetInfo.fetch();
+    if (!state.isConnected) {
+      alert("No internet connection. Please check your network and try again.");
+      return;
+    }
+
     Alert.alert(
       "Confirm Deletion",
       "Are you sure you want to delete this subscription?",

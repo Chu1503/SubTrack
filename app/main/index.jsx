@@ -28,6 +28,9 @@ const calculateMonthlyPrice = (subscriptions) => {
       case "annually":
         monthlyPrice = subscription.price / 12;
         break;
+      case "semi-annually":
+        monthlyPrice = subscription.price / 6;
+        break;
       default:
         if (subscription.frequency.startsWith("custom:")) {
           const customFrequency = subscription.frequency.split(":")[1];
@@ -181,9 +184,7 @@ const Home = () => {
         } else {
           fetchSubscriptions();
         }
-
       }
-      // fetchSubscriptions();
     };
 
     checkAuthAndFetchSubscriptions();

@@ -6,14 +6,13 @@ import dash from "../assets/images/dash.png";
 import google from "../assets/images/google.png";
 import default_icon from "../assets/images/default_icon.png";
 
-import primevideo from "../assets/images/primevideo.png";
+import prime from "../assets/images/prime.png";
 import netflix from "../assets/images/netflix.png";
 import zee5 from "../assets/images/zee5.png";
 import sonyliv from "../assets/images/sonyliv.png";
 import googleone from "../assets/images/googleone.png";
 import spotify from "../assets/images/spotify.png";
 import applemusic from "../assets/images/applemusic.png";
-import amazonmusic from "../assets/images/amazonmusic.png";
 import disneyplus from "../assets/images/disneyplus.png";
 import airtel from "../assets/images/airtel.png";
 import jio from "../assets/images/jio.png";
@@ -38,7 +37,7 @@ export default {
   logo, 
   logoIcon, 
   logoText, 
-  primevideo, 
+  prime, 
   google, 
   dash, 
   netflix, 
@@ -48,7 +47,6 @@ export default {
   googleone,
   spotify,
   applemusic,
-  amazonmusic,
   disneyplus,
   airtel,
   jio,

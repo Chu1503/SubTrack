@@ -20,6 +20,7 @@ import colors from "../../constants/colors";
 import DatePicker from "react-native-modern-datepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import NetInfo from '@react-native-community/netinfo';
 
 const Edit = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -219,6 +220,12 @@ const Edit = () => {
   };
 
   const handleSubmit = async () => {
+    const state = await NetInfo.fetch();
+    if (!state.isConnected) {
+      alert("No internet connection. Please check your network and try again.");
+      return;
+    }
+
     const user = await AsyncStorage.getItem("user");
     const userData = JSON.parse(user);
     const userId = userData.user.id;
