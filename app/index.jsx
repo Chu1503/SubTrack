@@ -56,7 +56,7 @@ const Welcome = () => {
             title="Sign in with Google"
             handlePress={signIn}
             containerStyles="w-full mt-7"
-            textStyles="ml-2"
+            textStyles="ml-2 mb-1 font-bold"
           >
             <AntDesign name="google" size={30} color="#161622" className="mr-2" />
           </CustomButton>
